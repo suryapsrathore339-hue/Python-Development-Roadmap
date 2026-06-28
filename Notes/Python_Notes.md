@@ -160,3 +160,228 @@ Constructors automatically initialize object data when an object is created, mak
 ## Today's Learning
 
 Today I learned how Python objects store their own data using constructors and how methods define the behavior of those objects.
+
+📘 Day 3 Notes - Inheritance in Python
+What is Inheritance?
+
+Inheritance is an OOP concept in which one class acquires the properties (attributes) and behaviors (methods) of another class.
+
+It promotes:
+
+Code Reusability
+Better Organization
+Easier Maintenance
+Terminology
+Parent Class (Base Class)
+
+The class whose properties are inherited.
+
+Example:
+
+class Animal:
+    pass
+Child Class (Derived Class)
+
+The class that inherits from another class.
+
+Example:
+
+class Bird(Animal):
+    pass
+
+Here,
+
+Animal → Parent Class
+Bird → Child Class
+Syntax
+class Parent:
+    pass
+
+class Child(Parent):
+    pass
+
+The child class automatically gets access to all public attributes and methods of the parent class.
+
+Example
+class Animal:
+    def speak(self):
+        print("Animal speaks")
+
+class Bird(Animal):
+    def fly(self):
+        print("Bird is flying")
+
+b1 = Bird()
+
+b1.speak()
+b1.fly()
+
+Output
+
+Animal speaks
+Bird is flying
+Why Use Inheritance?
+
+Without inheritance:
+
+class Bird:
+    def speak(self):
+        print("Animal speaks")
+
+    def fly(self):
+        print("Bird is flying")
+
+Every animal class would need its own speak() method.
+
+With inheritance:
+
+Animal
+   ↑
+Bird
+Dog
+Cat
+Horse
+
+Only write speak() once.
+
+Constructor Inheritance
+
+If the child class doesn't have its own constructor, it automatically uses the parent's constructor.
+
+Example:
+
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Bird(Animal):
+    pass
+
+b1 = Bird("Parrot")
+
+print(b1.name)
+
+Output
+
+Parrot
+Adding New Methods
+
+A child class can have its own methods.
+
+Example:
+
+class Animal:
+    def speak(self):
+        print("Animal speaks")
+
+class Bird(Animal):
+    def fly(self):
+        print("Bird flies")
+
+Bird now has:
+
+speak()
+fly()
+Important Points
+
+✅ Child class inherits attributes.
+
+✅ Child class inherits methods.
+
+✅ Parent class cannot access child class methods.
+
+Example:
+
+a = Animal()
+
+a.fly()
+
+This gives an error because fly() belongs only to Bird.
+
+Real Life Examples
+Vehicle
+Vehicle
+│
+├── Car
+├── Bike
+├── Bus
+
+Vehicle has:
+
+start()
+stop()
+
+Car additionally has:
+
+openSunroof()
+
+Bike additionally has:
+
+wheelie()
+Employee
+Employee
+│
+├── Teacher
+├── Manager
+├── Engineer
+
+Employee:
+
+name
+salary
+
+Teacher:
+
+subject
+
+Engineer:
+
+programming_language
+Advantages
+
+✔ Code Reusability
+
+✔ Less Code Duplication
+
+✔ Easier Maintenance
+
+✔ Better Code Organization
+
+✔ Extensibility
+
+Disadvantages
+
+❌ Can create complex class hierarchies.
+
+❌ Deep inheritance makes debugging difficult.
+
+Interview Questions
+Q1. What is inheritance?
+
+Inheritance is the process through which one class acquires the properties and methods of another class.
+
+Q2. Why do we use inheritance?
+
+To reuse existing code and avoid duplication.
+
+Q3. Which class is inherited?
+
+The Parent (Base) class.
+
+Q4. Which class inherits?
+
+The Child (Derived) class.
+
+Q5. Can a parent class access child methods?
+
+No.
+
+Q6. Can a child class access parent methods?
+
+Yes.
+
+Key Takeaways
+Inheritance allows one class to reuse another class's code.
+The parent class provides common functionality.
+The child class can add its own functionality while still using the parent's features.
+It is one of the four pillars of Object-Oriented Programming (OOP).
