@@ -385,3 +385,232 @@ Inheritance allows one class to reuse another class's code.
 The parent class provides common functionality.
 The child class can add its own functionality while still using the parent's features.
 It is one of the four pillars of Object-Oriented Programming (OOP).
+
+
+📘 Day 4 Notes – Polymorphism & Method Overriding
+1. What is Polymorphism?
+
+Definition:
+Polymorphism means "one interface, many forms."
+
+Poly = Many
+Morphism = Forms
+
+In Python, polymorphism allows the same method name to perform different actions depending on the object that calls it.
+
+Example
+class Dog:
+    def speak(self):
+        print("Bark")
+
+class Cat:
+    def speak(self):
+        print("Meow")
+
+Dog().speak()
+Cat().speak()
+
+Output
+
+Bark
+Meow
+
+Although both classes have the same method name (speak()), the behavior is different.
+
+2. What is Method Overriding?
+
+Definition:
+
+Method overriding occurs when a child class provides its own implementation of a method that already exists in the parent class.
+
+Example
+class Animal:
+    def speak(self):
+        print("Animal speaks")
+
+class Dog(Animal):
+    def speak(self):
+        print("Dog barks")
+
+Here, Dog overrides the speak() method of Animal.
+
+3. How Python Searches for Methods
+
+When we call
+
+dog.speak()
+
+Python checks in this order:
+
+Child Class
+      ↓
+Method Found?
+      ↓
+Yes → Execute it
+
+No
+      ↓
+Parent Class
+      ↓
+Method Found?
+      ↓
+Yes → Execute it
+
+No
+      ↓
+AttributeError
+4. What is Runtime Polymorphism?
+
+The method that gets executed is decided while the program is running, based on the actual object.
+
+Example:
+
+animals = [Dog(), Cat(), Cow()]
+
+for animal in animals:
+    animal.speak()
+
+Output
+
+Bark
+Meow
+Moo
+
+The loop simply calls:
+
+animal.speak()
+
+Python automatically selects the correct method.
+
+5. Why Do We Use Polymorphism?
+
+✅ Reduces if-else statements.
+
+✅ Makes code flexible.
+
+✅ Makes programs easier to extend.
+
+✅ Improves code readability.
+
+✅ Used in large software projects and frameworks.
+
+6. Difference Between Inheritance and Polymorphism
+Inheritance	Polymorphism
+Child inherits from parent	Same method behaves differently
+Creates relationship	Provides different behavior
+Used for code reuse	Used for flexibility
+7. Method Overriding vs Method Overloading
+Method Overriding
+class Animal:
+    def speak(self):
+        print("Animal")
+
+class Dog(Animal):
+    def speak(self):
+        print("Dog")
+
+✔ Supported in Python.
+
+Method Overloading
+def add(a, b):
+    pass
+
+def add(a, b, c):
+    pass
+
+❌ Python does not support traditional method overloading. The second definition replaces the first. (There are alternative techniques, but this classic form doesn't work.)
+
+8. Calling Parent's Method
+
+Use super().
+
+Example
+
+class Animal:
+    def speak(self):
+        print("Animal speaks")
+
+class Dog(Animal):
+    def speak(self):
+        super().speak()
+        print("Dog barks")
+
+Output
+
+Animal speaks
+Dog barks
+
+super() calls the parent class's method.
+
+9. Using pass
+
+Example
+
+class Employee:
+    def work(self):
+        pass
+
+pass means:
+
+"Do nothing for now."
+
+The child class will implement the method.
+
+10. Better Practice
+
+Instead of
+
+pass
+
+Use
+
+raise NotImplementedError("Subclasses must implement work()")
+
+This forces every child class to define its own version of the method.
+
+11. Real-Life Example
+class Payment:
+    def pay(self):
+        pass
+
+class UPI(Payment):
+    def pay(self):
+        print("Paid using UPI")
+
+class Card(Payment):
+    def pay(self):
+        print("Paid using Card")
+
+class Cash(Payment):
+    def pay(self):
+        print("Paid using Cash")
+
+payments = [UPI(), Card(), Cash()]
+
+for payment in payments:
+    payment.pay()
+
+Output
+
+Paid using UPI
+Paid using Card
+Paid using Cash
+
+This is a practical example of polymorphism.
+
+⭐ Interview Definitions
+Polymorphism
+
+Polymorphism is the ability of the same method or interface to perform different actions depending on the object that invokes it.
+
+Method Overriding
+
+Method overriding is when a child class provides its own implementation of a method that is already defined in its parent class.
+
+🧠 Key Takeaways
+✔ Polymorphism means one interface, many forms.
+✔ Method overriding is the most common way to achieve polymorphism in Python.
+✔ Python first looks for a method in the child class, then in the parent class.
+✔ super() is used to call the parent class's method.
+✔ pass is a placeholder; NotImplementedError is better when a method must be implemented by subclasses.
+✔ Polymorphism makes code more flexible, reusable, and maintainable.
