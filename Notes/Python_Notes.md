@@ -614,3 +614,309 @@ Method overriding is when a child class provides its own implementation of a met
 ✔ super() is used to call the parent class's method.
 ✔ pass is a placeholder; NotImplementedError is better when a method must be implemented by subclasses.
 ✔ Polymorphism makes code more flexible, reusable, and maintainable.
+
+Day 5 Notes – Encapsulation
+
+
+1. What is Encapsulation?
+
+Definition:
+
+Encapsulation is the process of binding data (variables) and methods (functions) together inside a class while restricting direct access to the data.
+
+It helps in:
+
+Data Hiding
+Data Protection
+Controlled Access
+2. Why do we need Encapsulation?
+
+Suppose we have
+
+class BankAccount:
+    def __init__(self):
+        self.balance = 1000
+
+Anyone can do
+
+account.balance = -100000
+
+Problems:
+
+Invalid balance
+No security
+Object loses control over its own data
+
+Instead
+
+account.deposit(500)
+
+account.withdraw(200)
+
+The object itself decides whether the operation is valid.
+
+3. Access Specifiers in Python
+Public
+self.name
+
+Accessible from anywhere.
+
+Example
+
+student.name
+Protected
+self._name
+
+Single underscore.
+
+Means:
+
+"Please don't access directly."
+
+It is only a convention.
+
+Private
+self.__balance
+
+Double underscore.
+
+Cannot be accessed directly.
+
+Python performs Name Mangling.
+
+4. Name Mangling
+
+Example
+
+class Student:
+    def __init__(self):
+        self.__marks = 95
+
+Trying
+
+student.__marks
+
+gives
+
+AttributeError
+
+Internally Python stores it as
+
+student._Student__marks
+
+Purpose:
+
+Avoid accidental access.
+Prevent accidental overriding in subclasses.
+
+Important: Name mangling is not absolute security. It is meant to discourage direct access.
+
+5. Private Variables
+
+Declaration
+
+self.__balance
+
+Access only through methods like
+
+deposit()
+
+withdraw()
+
+display_balance()
+6. Input Validation
+
+Never trust user input.
+
+Example
+
+deposit(-500)
+
+Wrong.
+
+Correct
+
+if amount > 0:
+
+Similarly
+
+withdraw(-100)
+
+should not be allowed.
+
+7. Business Logic
+
+A software engineer thinks about rules before writing code.
+
+For Bank Account
+
+Deposit rules
+
+Amount > 0
+
+Withdraw rules
+
+Amount > 0
+Amount <= Current Balance
+
+These rules are called Business Logic.
+
+8. Edge Cases
+
+Edge cases are situations that programmers often forget.
+
+Example
+
+Balance = 1000
+
+Withdraw
+
+1000
+
+Should it be allowed?
+
+Yes.
+
+Hence
+
+amount <= balance
+
+instead of
+
+amount < balance
+
+Another edge case
+
+withdraw(-500)
+
+Without validation
+
+balance -= (-500)
+
+Balance increases.
+
+9. deposit() Method
+
+Logic
+
+if amount > 0:
+    self.__balance += amount
+
+Otherwise
+
+print("Invalid Input")
+10. withdraw() Method
+
+Logic
+
+if amount > 0 and amount <= self.__balance:
+    self.__balance -= amount
+else:
+    print("Invalid Input")
+
+Professional version
+
+if amount <= 0:
+    print("Invalid Amount")
+
+elif amount > self.__balance:
+    print("Insufficient Balance")
+
+else:
+    self.__balance -= amount
+11. Display Method
+
+Good version
+
+def display_balance(self):
+    print("Account Holder :", self.name)
+    print("Current Balance :", self.__balance)
+12. super()
+
+Today we revised
+
+super().method()
+
+It calls the parent class's method, not always the constructor.
+
+Examples
+
+super().__init__()
+
+Parent constructor.
+
+super().display()
+
+Parent display method.
+
+13. Method Overriding
+
+Parent
+
+show()
+
+Child
+
+show()
+
+The child replaces the parent's implementation.
+
+14. Difference Between Overriding and Overloading
+Overriding	Overloading
+Parent and child classes	Same class
+Same method	Same method name
+Child replaces parent	Different parameters
+Supported in Python	Traditional overloading is not directly supported in Python; similar behavior is achieved using default arguments, *args, or **kwargs
+15. Good Coding Practices Learned Today
+
+✅ Validate input before processing.
+
+✅ Keep important data private.
+
+✅ Avoid duplicate variables.
+
+❌ Avoid
+
+self.balance = self.__balance
+
+when self.__balance already exists.
+
+Use meaningful messages.
+
+Instead of
+
+Invalid Input
+
+Use
+
+Insufficient Balance
+
+Invalid Amount
+16. Python Style (PEP 8)
+
+Instead of
+
+if(amount>0):
+
+Write
+
+if amount > 0:
+
+Instead of
+
+if(amount>0 and amount<=balance):
+
+Write
+
+if amount > 0 and amount <= balance:
+
+Readable code is professional code.
+
+17. Key Takeaways
+Encapsulation protects data from direct modification.
+Private variables use double underscores (__).
+Access data through methods rather than directly.
+Always validate user input.
+Think about edge cases before finalizing logic.
+super() calls the specified parent method.
+Writing correct logic is more important than memorizing syntax.
