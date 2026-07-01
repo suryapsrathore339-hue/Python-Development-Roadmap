@@ -920,3 +920,357 @@ Always validate user input.
 Think about edge cases before finalizing logic.
 super() calls the specified parent method.
 Writing correct logic is more important than memorizing syntax.
+
+📘 Python Development Journey – Day 6 Notes
+Topic: OOP Practice – Bank Management System
+1. What did we learn today?
+
+Today was not about learning a new Python concept.
+
+Today was about applying everything learned in the previous five days to build a real-world application.
+
+We designed and implemented a Bank Management System using Object-Oriented Programming.
+
+2. OOP Design Process
+
+Before writing code, always ask these questions:
+
+Step 1
+
+What is my object?
+
+Example:
+
+BankAccount
+Step 2
+
+What data should this object store?
+
+Example:
+
+Name
+Account Number
+Bank Name
+Balance
+
+These become attributes.
+
+Step 3
+
+What actions can this object perform?
+
+Example:
+
+Deposit Money
+
+Withdraw Money
+
+Display Details
+
+These become methods.
+
+3. Constructor Design
+
+A constructor initializes the object when it is created.
+
+Example
+
+def __init__(self, name, account_number, bank_name, balance):
+
+The constructor should receive all information necessary to create a complete object.
+
+4. Public vs Private Variables
+Public Variables
+
+Accessible from anywhere.
+
+Example
+
+self.name
+self.bank_name
+
+Used for information that does not require strict protection.
+
+Private Variables
+
+Protected from direct modification.
+
+Example
+
+self.__balance
+
+self.__account_number
+
+Used for sensitive information.
+
+5. Why is Balance Private?
+
+Balance should never be changed directly.
+
+Incorrect
+
+account.__balance = 100000
+
+Correct
+
+deposit()
+
+withdraw()
+
+This protects the integrity of the object.
+
+6. Constructor Execution
+
+When we write
+
+s1 = BankAccount(...)
+
+Python internally performs
+
+BankAccount.__init__(s1, ...)
+
+This is why self refers to the current object.
+
+7. Understanding self
+
+self is not a keyword.
+
+It is simply the first parameter that receives the object calling the method.
+
+Example
+
+s1.display()
+
+Internally becomes
+
+BankAccount.display(s1)
+
+Therefore
+
+self
+
+becomes
+
+s1
+8. Designing Methods
+
+Every method should answer three questions:
+
+What input does it need?
+
+Example
+
+deposit(amount)
+What should it validate?
+
+Example
+
+amount > 0
+What object data should it modify?
+
+Example
+
+self.__balance
+9. Input Validation
+
+Never trust user input.
+
+Example
+
+deposit(-500)
+
+Should be rejected.
+
+Example
+
+withdraw(-200)
+
+Should be rejected.
+
+Example
+
+withdraw(100000)
+
+Should also be rejected if balance is insufficient.
+
+10. Good Error Messages
+
+Avoid
+
+Invalid Input
+
+Prefer
+
+Deposit amount must be positive
+
+Withdrawal amount must be positive
+
+Insufficient Balance
+
+Specific messages improve user experience.
+
+11. Encapsulation
+
+Encapsulation means
+
+Keeping data and methods together inside a class.
+Protecting important data from direct access.
+Allowing modifications only through controlled methods.
+
+Example
+
+Deposit
+
+Withdraw
+
+instead of directly modifying
+
+Balance
+12. Professional Coding Practices Learned Today
+Meaningful Method Names
+
+Good
+
+deposit()
+
+withdraw()
+
+display()
+
+Bad
+
+fun1()
+
+abc()
+Validate Before Updating
+
+Always
+
+Validate
+
+↓
+
+Modify Object
+
+↓
+
+Display Success
+
+Never update object data before validation.
+
+Protect Sensitive Information
+
+Private variables should be used when the data must remain secure.
+
+13. Interview Questions
+Q1
+
+What is Object-Oriented Programming?
+
+Q2
+
+Why do we use constructors?
+
+Q3
+
+Why is self required?
+
+Q4
+
+Difference between public and private variables.
+
+Q5
+
+Explain encapsulation using BankAccount.
+
+Q6
+
+Why should balance be private?
+
+Q7
+
+What happens internally when
+
+account.deposit(500)
+
+is executed?
+
+Q8
+
+Can private variables be accessed inside the class?
+
+Q9
+
+Why do we validate input?
+
+Q10
+
+What are the responsibilities of a constructor?
+
+14. Common Mistakes
+
+❌ Hardcoding values
+
+self.__balance = 1000
+
+Instead of
+
+self.__balance = balance
+
+❌ Forgetting validation
+
+withdraw(-500)
+
+❌ Accessing object data without self
+
+Incorrect
+
+balance += amount
+
+Correct
+
+self.__balance += amount
+
+❌ Making every variable public
+
+Sensitive data should remain private.
+
+15. Mentor's Key Takeaway
+
+Today, you learned one of the most important lessons in software engineering:
+
+Think before you code.
+
+The process is:
+
+Problem
+
+↓
+
+Identify Objects
+
+↓
+
+Identify Data
+
+↓
+
+Identify Behaviours
+
+↓
+
+Design Constructor
+
+↓
+
+Write Methods
+
+↓
+
+Validate Input
+
+↓
+
+Review & Improve
+
+This design-first mindset is what separates developers from people who only memorize syntax.
