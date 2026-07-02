@@ -1274,3 +1274,264 @@ Validate Input
 Review & Improve
 
 This design-first mindset is what separates developers from people who only memorize syntax.
+
+Topic: Composition (HAS-A Relationship)
+
+Project: Library Management System
+
+1. What is Composition?
+
+Composition is an OOP concept in which one class contains objects of another class.
+
+It represents a HAS-A relationship.
+
+Definition
+
+Composition means creating a class that uses one or more objects of another class as its members.
+
+2. HAS-A Relationship
+
+Examples:
+
+Car HAS-A Engine
+
+Library HAS-A Books
+
+University HAS-A Students
+
+Hospital HAS-A Patients
+
+Playlist HAS-A Songs
+
+Notice that none of these objects inherit from each other.
+
+They simply contain other objects.
+
+3. Composition vs Inheritance
+Composition
+
+Relationship:
+
+HAS-A
+
+Example
+
+Library HAS-A Book
+
+Purpose
+
+Objects work together.
+One object contains another object.
+Inheritance
+
+Relationship
+
+IS-A
+
+Example
+
+Dog IS-A Animal
+
+Purpose
+
+Code reuse.
+Parent-child relationship.
+4. Why Use Composition?
+
+Composition helps us:
+
+Organize software into multiple classes.
+Keep responsibilities separate.
+Reuse objects.
+Build scalable applications.
+Follow good software design.
+5. Store Objects Instead of Data
+
+Instead of
+
+books = [
+    "Python",
+    "Java"
+]
+
+Prefer
+
+books = [
+    Book(...),
+    Book(...)
+]
+Why?
+
+A Book object contains:
+
+Book Name
+Author
+Book ID
+Availability
+Methods
+
+Storing only the name loses all other information.
+
+6. Library Design
+
+The Library class should not store:
+
+Book Name
+Author
+Book ID
+
+Instead it should store
+
+self.books = []
+
+which is a list of Book objects.
+
+7. Responsibilities of Classes
+Book
+
+Responsible for:
+
+Storing book details.
+Displaying book information.
+Managing book-related behavior.
+Library
+
+Responsible for:
+
+Managing a collection of books.
+Adding books.
+Displaying all books.
+Searching books.
+
+The library should not manage the internal details of a book.
+
+8. Encapsulation + Composition
+
+Private data should remain inside the class.
+
+Incorrect
+
+book.__Book_ID
+
+Correct
+
+book.display_book_info()
+
+The object itself should manage its private data.
+
+9. Why Use a List?
+
+Instead of
+
+self.book1
+self.book2
+self.book3
+
+Use
+
+self.books = []
+
+Advantages:
+
+Unlimited number of books.
+Easy to add/remove books.
+Cleaner code.
+Scalable.
+10. Why Not Store Number of Books?
+
+Avoid
+
+self.number_of_books
+
+because
+
+len(self.books)
+
+already gives the count.
+
+Principle
+
+Do not store duplicate information if it can be calculated.
+
+11. Constructor Design
+
+Book
+
+Book(name, author, id)
+
+Availability should automatically start as
+
+True
+
+A new book should be available by default.
+
+Library
+
+Library(name)
+
+Initialize
+
+self.books = []
+
+The library starts empty and books are added later.
+
+12. Composition Diagram
+Library
+│
+├── library_name
+│
+└── books
+      │
+      ├── Book Object
+      ├── Book Object
+      ├── Book Object
+      └── Book Object
+
+This is the visual representation of Composition.
+
+13. Interview Questions
+Q1. What is Composition?
+
+Answer:
+Composition is an OOP concept where one class contains objects of another class, representing a HAS-A relationship.
+
+Q2. Difference between Composition and Inheritance?
+
+Composition
+
+HAS-A relationship
+One object contains another object
+More flexible
+
+Inheritance
+
+IS-A relationship
+Child inherits from parent
+Used for code reuse
+Q3. Why does Library store Book objects instead of book names?
+
+Answer:
+A Book object stores all related information (title, author, ID, availability) and methods. Storing only names would lose this information.
+
+Q4. Why is self.books a list?
+
+Answer:
+A library can have any number of books. A list allows dynamic addition and removal of Book objects.
+
+Q5. Why shouldn't Library directly access private variables of Book?
+
+Answer:
+Private variables are protected by encapsulation. The Book class should provide methods to interact with its own data.
+
+Q6. Why is display_book_info() inside the Book class?
+
+Answer:
+A Book object knows its own details. This follows the Single Responsibility Principle, where each class manages its own responsibilities.
+
+14. Key Takeaways
+Composition represents a HAS-A relationship.
+Store objects, not just primitive data.
+A class should have one clear responsibility.
+Use lists to manage multiple objects.
+Protect private data using encapsulation.
+Design objects that collaborate rather than one class doing everything.
