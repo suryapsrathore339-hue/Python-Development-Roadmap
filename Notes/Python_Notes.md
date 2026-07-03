@@ -1535,3 +1535,39 @@ A class should have one clear responsibility.
 Use lists to manage multiple objects.
 Protect private data using encapsulation.
 Design objects that collaborate rather than one class doing everything.
+
+📒 Day 8 Notes (Interview Revision)
+1. Why File Handling?
+Variables are stored in RAM.
+RAM is temporary.
+Files provide permanent storage.
+2. File Modes
+Mode	Purpose	If file doesn't exist	If file exists
+r	Read	❌ Error	Opens for reading
+w	Write	✅ Creates file	Overwrites existing content
+a	Append	✅ Creates file	Adds data at the end
+3. open()
+file = open("notes.txt", "r")
+Opens the file.
+Returns a file object.
+Does not read the contents.
+4. read()
+content = file.read()
+Reads the entire file.
+Returns a string.
+5. write()
+file.write("Hello")
+Writes data to the file.
+6. close()
+file.close()
+Releases system resources.
+Ensures data is saved properly.
+7. with open()
+with open("notes.txt", "r") as file:
+    content = file.read()
+Automatically closes the file.
+Preferred in professional Python code.
+8. File Pointer
+read() moves the file pointer to the end.
+Calling read() again returns an empty string.
+Reading after close() raises an error.
