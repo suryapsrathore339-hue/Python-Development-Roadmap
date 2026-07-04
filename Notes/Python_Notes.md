@@ -1571,3 +1571,246 @@ Preferred in professional Python code.
 read() moves the file pointer to the end.
 Calling read() again returns an empty string.
 Reading after close() raises an error.
+
+📒 Day 9 Notes – Exception Handling (Python)
+Prepared by your Python Mentor 🤝
+🎯 What is an Exception?
+
+An Exception is a runtime error that occurs while a program is executing and interrupts the normal flow of the program.
+
+Examples
+10 / 0
+
+➡️ ZeroDivisionError
+
+int("Surya")
+
+➡️ ValueError
+
+file = open("abc.txt", "r")
+
+(If the file doesn't exist)
+
+➡️ FileNotFoundError
+
+🎯 Why Do We Use Exception Handling?
+
+Without exception handling:
+
+❌ Program crashes.
+❌ Poor user experience.
+❌ Remaining code doesn't execute.
+
+With exception handling:
+
+✅ Program continues running.
+✅ Displays meaningful error messages.
+✅ Makes applications more robust and professional.
+🏦 Real-Life Analogy
+
+Think of an ATM.
+
+Normal Flow
+Insert Card
+      ↓
+Enter PIN
+      ↓
+Withdraw Money
+
+If you enter the wrong PIN:
+
+❌ ATM doesn't crash.
+
+✅ It displays:
+
+Incorrect PIN. Please try again.
+
+This is exactly what exception handling does.
+
+🎯 try
+
+The try block contains the code that might cause an exception.
+
+try:
+    age = int(input("Enter age: "))
+
+Meaning:
+
+"Try to execute this code."
+
+🎯 except
+
+The except block executes only if an exception occurs.
+
+try:
+    age = int(input())
+
+except:
+    print("Invalid input")
+
+Meaning:
+
+"If an error occurs, handle it here."
+
+🎯 Catching Specific Exceptions
+
+Instead of handling all errors together:
+
+except:
+
+Professional code catches specific exceptions.
+
+Example:
+
+except ValueError:
+except ZeroDivisionError:
+
+Advantages:
+
+More readable.
+Better debugging.
+Better user experience.
+Industry best practice.
+🎯 Common Exceptions
+1. ValueError
+
+Occurs when the value is invalid.
+
+Example:
+
+int("Surya")
+
+Reason:
+
+The type is acceptable (str), but the value cannot be converted into an integer.
+
+2. ZeroDivisionError
+
+Occurs when dividing by zero.
+
+Example:
+
+100 / 0
+3. TypeError
+
+Occurs when incompatible types are used.
+
+Example:
+
+"Hello" + 5
+
+Reason:
+
+String and integer cannot be added together.
+
+🧠 Difference Between ValueError and TypeError
+ValueError	TypeError
+Correct type, wrong value	Wrong data type
+int("Surya")	"Hello" + 5
+
+Easy Trick:
+
+ValueError → Right type, wrong value.
+TypeError → Wrong type.
+🎯 else
+
+The else block executes only if no exception occurs.
+
+Example:
+
+try:
+    x = int(input())
+
+except ValueError:
+    print("Invalid")
+
+else:
+    print("Input accepted")
+
+If the input is:
+
+25
+
+Output:
+
+Input accepted
+🎯 finally
+
+The finally block executes always, regardless of whether an exception occurs.
+
+Example:
+
+try:
+    x = 10 / 0
+
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+
+finally:
+    print("Program ended")
+
+Output:
+
+Cannot divide by zero
+Program ended
+🎯 Flow of Exception Handling
+          try
+           │
+           ▼
+   Is there an exception?
+      /            \
+    No              Yes
+    │               │
+    ▼               ▼
+  else           except
+      \          /
+       \        /
+        ▼      ▼
+        finally
+🎯 Complete Example
+try:
+    x = int(input("Enter first number: "))
+    y = int(input("Enter second number: "))
+
+    result = x / y
+    print("Result:", result)
+
+except ZeroDivisionError:
+    print("Cannot divide by zero.")
+
+except ValueError:
+    print("Invalid input! Please enter numbers only.")
+
+else:
+    print("Division successful.")
+
+finally:
+    print("Program ended.")
+🎯 Interview Questions
+Q1. What is an Exception?
+
+An exception is a runtime error that interrupts the normal execution of a program.
+
+Q2. Why do we use try-except?
+
+To handle runtime errors gracefully, prevent program crashes, and provide meaningful feedback to the user.
+
+Q3. Difference between try and except?
+try → Contains code that might raise an exception.
+except → Handles the exception if it occurs.
+Q4. When does else execute?
+
+Only when no exception occurs in the try block.
+
+Q5. When does finally execute?
+
+Always, whether an exception occurs or not.
+
+💡 Key Takeaways
+✔ Exceptions are runtime errors.
+✔ try contains risky code.
+✔ except handles errors.
+✔ Catch specific exceptions whenever possible.
+✔ else runs only if the try block succeeds.
+✔ finally runs in every situation.
+✔ Exception handling makes programs robust, user-friendly, and professional.

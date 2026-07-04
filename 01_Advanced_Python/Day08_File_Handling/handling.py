@@ -11,7 +11,7 @@
 # print(content)
 # file.close()
 
-file=open("notes.txt","w")
+# file=open("notes.txt","w")
 # file.write("Hello Surya")
 # file.close()
 
