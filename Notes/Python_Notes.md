@@ -1814,3 +1814,247 @@ Always, whether an exception occurs or not.
 ✔ else runs only if the try block succeeds.
 ✔ finally runs in every situation.
 ✔ Exception handling makes programs robust, user-friendly, and professional.
+
+📒 Day 10 Notes – Python (raise) + AI Foundation (Machine Learning vs Deep Learning)
+
+Prepared by your Mentor 🤝
+
+🐍 Python: raise Keyword
+🎯 What is raise?
+
+The raise keyword is used to manually generate an exception when our program detects an invalid condition.
+
+Syntax:
+
+raise ExceptionType("Error Message")
+
+Example:
+
+age = int(input("Enter your age: "))
+
+if age < 0:
+    raise ValueError("Age cannot be negative.")
+🤔 Why do we use raise?
+
+Python automatically raises exceptions like:
+
+int("Surya")          # ValueError
+10 / 0                # ZeroDivisionError
+
+But Python doesn't know our business rules.
+
+Example:
+
+deposit = -500
+
+Python thinks this is just a number.
+
+We know this is invalid.
+
+So we manually raise an exception.
+
+🏦 Real-Life Analogy
+
+Imagine you're a bank manager.
+
+Customer:
+
+Deposit = -500
+
+You immediately stop the transaction.
+
+This is exactly what raise does.
+
+🎯 Using raise with try-except
+try:
+    amount = int(input("Enter amount: "))
+
+    if amount <= 0:
+        raise ValueError("Amount must be positive.")
+
+except ValueError as e:
+    print(e)
+🎯 Exception Object (as e)
+except ValueError as e:
+    print(e)
+
+e stores the error message.
+
+Example:
+
+raise ValueError("Invalid marks")
+
+Output:
+
+Invalid marks
+🧠 Difference Between print() and raise
+
+❌ Only displays a message:
+
+print("Age cannot be negative")
+
+✅ Creates an actual exception:
+
+raise ValueError("Age cannot be negative.")
+
+Remember:
+
+print() informs the user.
+
+raise informs Python.
+
+🎯 Complete Flow
+try
+   │
+   ▼
+Input
+   │
+   ▼
+Business Rule Check
+   │
+   ├── Valid → else
+   │
+   └── Invalid → raise
+                    │
+                    ▼
+               except
+                    │
+                    ▼
+                finally
+🤖 AI Foundation
+What is Machine Learning?
+
+Machine Learning is a subset of AI where computers learn patterns from data instead of following manually written rules.
+
+Example:
+
+Thousands of Cat Images
+        ↓
+Machine Learning
+        ↓
+Model
+        ↓
+New Image
+        ↓
+Prediction
+What is Deep Learning?
+
+Deep Learning is a subset of Machine Learning that uses deep neural networks to automatically learn complex patterns from large amounts of data.
+
+🌳 AI Hierarchy
+Artificial Intelligence
+│
+├── Rule-Based AI
+│
+└── Machine Learning
+      │
+      ├── Linear Regression
+      ├── Decision Trees
+      ├── Random Forest
+      │
+      └── Deep Learning
+             │
+             ├── CNN
+             ├── RNN
+             ├── LSTM
+             └── Transformers (ChatGPT)
+🆚 Machine Learning vs Deep Learning
+Machine Learning	Deep Learning
+Subset of AI	Subset of Machine Learning
+Works well with smaller datasets	Needs large datasets
+Often requires manual feature engineering	Learns features automatically
+Faster to train	More computationally expensive
+Simpler models	Deep Neural Networks
+🎯 Traditional Programming vs Machine Learning
+Traditional Programming
+Data + Rules
+      ↓
+   Output
+
+The programmer writes the rules.
+
+Machine Learning
+Data + Correct Answers
+         ↓
+      Learning
+         ↓
+       Model
+         ↓
+     Prediction
+
+The computer learns the rules.
+
+🎯 Why Deep Learning?
+
+Instead of manually writing rules like:
+
+Two ears
+Four legs
+Tail
+
+Deep Learning learns these features automatically from millions of images.
+
+This makes it much better at handling:
+
+Different angles
+Different lighting
+Occlusions
+Background changes
+New unseen images
+🧠 The Most Important Word
+Generalization
+
+Definition:
+
+The ability of a model to correctly predict outcomes for new, unseen data after learning from training data.
+
+Example:
+
+The model has never seen this exact cat image before.
+
+It still predicts:
+
+"This is a cat."
+
+That is generalization.
+
+🏆 Golden Rules (Write These in Your Notebook)
+Rule 1
+
+Artificial Intelligence aims to make machines perform tasks requiring human intelligence.
+
+Rule 2
+
+Machine Learning learns patterns from data.
+
+Rule 3
+
+Deep Learning automatically learns complex patterns using deep neural networks.
+
+Rule 4
+
+Deep Learning performs best when large amounts of data are available.
+
+Rule 5
+
+Generalization is the ability to perform well on unseen data.
+
+🎯 Interview Questions
+Q1. What is the raise keyword?
+
+The raise keyword is used to manually generate an exception when a program detects an invalid condition.
+
+Q2. Difference between print() and raise?
+print() displays a message.
+raise creates an actual exception.
+Q3. What is Machine Learning?
+
+A subset of AI where computers learn patterns from data instead of following manually written rules.
+
+Q4. What is Deep Learning?
+
+A subset of Machine Learning that uses deep neural networks to automatically learn complex patterns from large datasets.
+
+Q5. What is Generalization?
+
+The ability of a trained model to make accurate predictions on unseen data.
