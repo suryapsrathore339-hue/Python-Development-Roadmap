@@ -2723,3 +2723,290 @@ It learns patterns from the data and uses those patterns to make predictions on 
 Q6. What is Generalization?
 
 The ability of a trained model to perform well on unseen data.
+
+
+📒 Day 13 Notes – Lambda Functions & Machine Learning (Training vs Testing)
+
+90-Day Python + AI/ML Roadmap
+Student: Surya Rathore
+Day: 13 ✅
+
+🐍 Python Development
+🔹 Lambda Functions
+What is a Lambda Function?
+
+A Lambda Function is a small anonymous function that can be written in one line.
+
+It is mainly used for short and temporary operations.
+
+Syntax
+lambda parameters: expression
+
+Example:
+
+square = lambda x: x*x
+print(square(5))
+
+Output:
+
+25
+🔹 Normal Function vs Lambda Function
+Normal Function
+def square(x):
+    return x*x
+
+print(square(5))
+Lambda Function
+square = lambda x: x*x
+
+print(square(5))
+Difference
+Normal Function	Lambda Function
+Uses def	Uses lambda
+Multiple lines	Single line
+Uses return	No explicit return
+Best for reusable functions	Best for short, temporary functions
+🔹 Examples
+Square
+square = lambda x: x*x
+print(square(4))
+
+Output
+
+16
+Cube
+cube = lambda x: x**3
+print(cube(3))
+
+Output
+
+27
+Addition
+add = lambda a,b: a+b
+print(add(10,20))
+
+Output
+
+30
+Maximum of Two Numbers
+maximum = lambda a,b: a if a>b else b
+
+print(maximum(10,20))
+
+Output
+
+20
+Positive Number Check
+positive = lambda x:x>0
+
+print(positive(5))
+print(positive(-3))
+
+Output
+
+True
+False
+💡 Advantages of Lambda Functions
+Short and readable
+Less code
+Useful for temporary functions
+Commonly used with functions like map(), filter(), and sorted() (we'll learn these later)
+🤖 Machine Learning
+📊 Training Data
+
+Training Data is the part of the dataset used to teach the Machine Learning model.
+
+The model learns:
+
+Patterns
+Relationships
+Rules
+
+Example:
+
+Hours Studied	Result
+8	Pass
+7	Pass
+2	Fail
+
+The model studies these examples to learn the relationship between study hours and result.
+
+📝 Testing Data
+
+Testing Data is not shown to the model during training.
+
+It is used only after training to check whether the model has learned correctly.
+
+Purpose:
+
+Evaluate the model
+Measure prediction accuracy
+Check generalization
+📈 Dataset Split
+
+Example:
+
+Dataset = 1000 rows
+
+1000 Rows
+│
+├── 800 → Training Data
+│
+└── 200 → Testing Data
+
+Typical split:
+
+80% Training
+20% Testing
+
+(Other ratios like 70:30 or 90:10 are also used depending on the problem.)
+
+🎯 Why Do We Split the Dataset?
+
+If we train and test on the same data:
+
+The model may simply memorize the answers.
+It may appear to perform perfectly.
+We cannot know whether it can handle new unseen data.
+
+Therefore, we always evaluate using Testing Data.
+
+🧠 Generalization
+
+Generalization means:
+
+The ability of a model to perform well on new unseen data.
+
+Goal of every Machine Learning model:
+
+✔ Learn patterns, not memorize examples.
+
+❌ Overfitting
+
+Definition:
+
+A model that performs very well on training data but poorly on testing data.
+
+Reason:
+
+It memorizes the training data instead of learning general patterns.
+
+Example:
+
+Training Accuracy = 99%
+
+Testing Accuracy = 52%
+
+This indicates Overfitting.
+
+🧩 Codeforces Analogy
+Training Data
+
+The Codeforces problems you've already solved.
+
+Examples:
+
+Binary Search
+Greedy
+Prefix Sum
+Monotonic Stack
+Testing Data
+
+The new contest problems that you've never seen before.
+
+If you solve them successfully:
+
+✔ You generalized.
+
+If you can only solve previously seen problems:
+
+❌ You are overfitting.
+
+🧠 Machine Learning Pipeline (So Far)
+Dataset
+   │
+   ▼
+Split Dataset
+   │
+   ├──────────────┐
+   │              │
+   ▼              ▼
+Training Set   Testing Set
+   │              │
+   ▼              │
+Learn Patterns    │
+   │              │
+   └──────► Evaluate Model
+                    │
+                    ▼
+          Predict New Data
+🌟 Key Terms
+Dataset
+
+Collection of data arranged in rows and columns.
+
+Feature
+
+Input variables used by the model.
+
+Examples:
+
+Age
+Salary
+Weight
+Label
+
+Correct output the model learns to predict.
+
+Examples:
+
+Pass/Fail
+Apple/Banana
+House Price
+Training Data
+
+Data used to teach the model.
+
+Testing Data
+
+Data used to evaluate the model.
+
+Generalization
+
+Ability to perform well on unseen data.
+
+Overfitting
+
+Memorizing the training data instead of learning patterns.
+
+💼 Interview Questions
+Q1. What is a Lambda Function?
+
+A lambda function is a small anonymous function written in a single line using the lambda keyword.
+
+Q2. Difference between a normal function and a lambda function?
+Normal Function	Lambda Function
+Uses def	Uses lambda
+Multi-line	Single-line
+Explicit return	Implicit return
+Best for reusable code	Best for short tasks
+Q3. What is Training Data?
+
+Training Data is the data used to teach a Machine Learning model by helping it learn patterns.
+
+Q4. What is Testing Data?
+
+Testing Data is unseen data used to evaluate the model after training.
+
+Q5. Why do we split a dataset?
+
+To check whether the model has learned patterns instead of memorizing the training data.
+
+Q6. What is Generalization?
+
+The ability of a Machine Learning model to perform well on new unseen data.
+
+Q7. What is Overfitting?
+
+Overfitting occurs when a model performs very well on training data but poorly on testing data because it memorizes the training data instead of learning patterns.
+
