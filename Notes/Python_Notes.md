@@ -3010,3 +3010,265 @@ Q7. What is Overfitting?
 
 Overfitting occurs when a model performs very well on training data but poorly on testing data because it memorizes the training data instead of learning patterns.
 
+
+📒 Day 14 Notes – map() Function & Machine Learning Workflow
+
+90-Day Python + AI/ML Roadmap
+Student: Surya Rathore
+Day: 14 ✅
+
+🐍 Python Development
+🔹 map() Function
+What is map()?
+
+map() is a built-in Python function that applies the same function to every element of an iterable (list, tuple, etc.).
+
+It helps write shorter, cleaner, and more readable code.
+
+Syntax
+map(function, iterable)
+function → The operation to perform.
+iterable → The collection (list, tuple, etc.) to process.
+
+Since map() returns a map object, we usually convert it to a list:
+
+list(map(function, iterable))
+🔹 Example 1 – Double Every Number
+numbers = [1, 2, 3, 4]
+
+result = list(map(lambda x: x * 2, numbers))
+
+print(result)
+
+Output:
+
+[2, 4, 6, 8]
+🔹 Example 2 – Square Every Number
+numbers = [2, 4, 6, 8]
+
+result = list(map(lambda x: x**2, numbers))
+
+print(result)
+
+Output:
+
+[4, 16, 36, 64]
+🔹 Example 3 – Convert Strings to Uppercase
+names = ["surya", "iiitdm", "python"]
+
+result = list(map(lambda x: x.upper(), names))
+
+print(result)
+
+Output:
+
+['SURYA', 'IIITDM', 'PYTHON']
+🔹 Example 4 – GST Calculation
+prices = [100, 250, 400, 150]
+
+new_prices = list(map(lambda x: x * 1.18, prices))
+
+print(new_prices)
+
+Output:
+
+[118.0, 295.0, 472.0, 177.0]
+🔹 for Loop vs map()
+for Loop	map()
+More code	Less code
+Manual iteration	Automatic iteration
+Flexible	Best for applying one function to all elements
+Beginner-friendly	Cleaner for simple transformations
+💡 Advantages of map()
+Shorter code
+Better readability
+Efficient for applying the same operation
+Often used with lambda functions
+Common in data processing pipelines
+🤖 Machine Learning
+🔹 Complete Machine Learning Workflow
+
+Every ML project follows a sequence of steps.
+
+Collect Data
+      ↓
+Clean Data
+      ↓
+Split Data
+      ↓
+Train Model
+      ↓
+Test Model
+      ↓
+Predict New Data
+1️⃣ Collect Data
+
+The first step is to collect relevant data.
+
+Example:
+
+Study Hours	Attendance	Result
+8	95%	Pass
+2	50%	Fail
+
+Without data, the model cannot learn.
+
+2️⃣ Clean Data
+
+Real-world data often contains:
+
+Missing values (NULL, ?)
+Invalid values (e.g., Age = -10)
+Duplicate records
+Incorrect formats
+
+Before training, we clean the data.
+
+Example:
+
+Age	Salary
+24	₹5 LPA
+-10	₹7 LPA
+
+Age cannot be negative, so this record must be corrected or removed.
+
+💡 Garbage In, Garbage Out (GIGO)
+
+If poor-quality data is used for training:
+
+➡️ Poor-quality predictions will be produced.
+
+Good data leads to better models.
+
+3️⃣ Split Data
+
+After cleaning, the dataset is divided into:
+
+Training Data (usually 80%)
+Testing Data (usually 20%)
+
+Example:
+
+1000 Rows
+│
+├── 800 → Training
+│
+└── 200 → Testing
+
+Purpose:
+
+Train on one part
+Evaluate on another
+4️⃣ Train Model
+
+The model studies the training data and learns patterns.
+
+Example:
+
+Hours Studied	Result
+8	Pass
+2	Fail
+
+The model learns:
+
+Students who study more are more likely to pass.
+
+5️⃣ Test Model
+
+The model is tested using unseen data.
+
+Example:
+
+Hours Studied	Result
+5	?
+
+The model predicts:
+
+Pass
+
+We compare the prediction with the actual answer to evaluate performance.
+
+6️⃣ Predict New Data
+
+After successful testing, the model is used in the real world.
+
+Example:
+
+A new student:
+
+Hours Studied	Attendance
+7	92%
+
+Prediction:
+
+Pass
+
+This stage is also called Inference.
+
+🌟 ML Workflow Summary
+Collect Data
+      ↓
+Clean Data
+      ↓
+Split Data
+      ↓
+Train Model
+      ↓
+Test Model
+      ↓
+Deploy / Predict New Data
+🔑 Important Terms
+Dataset
+
+A collection of organized data.
+
+Data Cleaning
+
+Removing or correcting invalid, missing, or duplicate data.
+
+Training Data
+
+Data used to teach the model.
+
+Testing Data
+
+Data used to evaluate the model.
+
+Generalization
+
+Ability to perform well on unseen data.
+
+Overfitting
+
+When the model memorizes training data instead of learning patterns.
+
+Inference
+
+Using the trained model to make predictions on new data.
+
+💼 Interview Questions
+Q1. What does map() do?
+
+It applies a function to every element of an iterable and returns a map object.
+
+Q2. Why do we use list() with map()?
+
+Because map() returns a map object, not a list. list() converts it into a list.
+
+Q3. What is the first step in a Machine Learning project?
+
+Collecting data.
+
+Without data, the model cannot learn.
+
+Q4. Why is data cleaning important?
+
+To remove incorrect, missing, or invalid data so the model learns from high-quality information.
+
+Q5. Why do we split the dataset?
+
+To train the model on one portion and evaluate it on unseen data.
+
+Q6. What is inference?
+
+Inference is the process of using a trained model to make predictions on new unseen data.
