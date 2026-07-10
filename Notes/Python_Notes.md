@@ -3272,3 +3272,275 @@ To train the model on one portion and evaluate it on unseen data.
 Q6. What is inference?
 
 Inference is the process of using a trained model to make predictions on new unseen data.
+
+📒 Day 15 Notes – filter() Function & Types of Machine Learning
+
+90-Day Python + AI/ML Roadmap
+Student: Surya Rathore
+Day: 15 ✅
+
+🐍 Python Development
+🔹 filter() Function
+What is filter()?
+
+filter() is a built-in Python function that selects only those elements that satisfy a given condition.
+
+Unlike map(), which transforms every element, filter() removes elements that do not satisfy the condition.
+
+Syntax
+filter(function, iterable)
+
+Since filter() returns a filter object, we usually convert it into a list.
+
+list(filter(function, iterable))
+🔹 Example 1 – Keep Even Numbers
+numbers = [5, 8, 12, 15, 20, 23]
+
+result = list(filter(lambda x: x % 2 == 0, numbers))
+
+print(result)
+
+Output
+
+[8, 12, 20]
+🔹 Example 2 – Keep Positive Numbers
+numbers = [-10, 5, -3, 8, 0, 12]
+
+result = list(filter(lambda x: x > 0, numbers))
+
+print(result)
+
+Output
+
+[5, 8, 12]
+
+Note: 0 is neither positive nor negative.
+
+🔹 Example 3 – Keep Long Strings
+students = ["Ram", "Shyam", "Python", "AI", "ML", "Machine Learning"]
+
+result = list(filter(lambda x: len(x) > 4, students))
+
+print(result)
+
+Output
+
+['Shyam', 'Python', 'Machine Learning']
+🔹 map() vs filter()
+map()	filter()
+Transforms every element	Selects matching elements
+Output size usually remains the same	Output size may decrease
+Returns modified elements	Returns only elements satisfying a condition
+
+Example:
+
+numbers = [1, 2, 3, 4]
+map()
+list(map(lambda x: x * 2, numbers))
+
+Output
+
+[2, 4, 6, 8]
+filter()
+list(filter(lambda x: x % 2 == 0, numbers))
+
+Output
+
+[2, 4]
+💡 Advantages of filter()
+Cleaner code
+Easy selection of required elements
+Frequently used in data preprocessing
+Works well with lambda functions
+🤖 Machine Learning
+🔹 Types of Machine Learning
+
+Machine Learning is broadly divided into three major categories.
+
+Machine Learning
+│
+├── Supervised Learning
+├── Unsupervised Learning
+└── Reinforcement Learning
+1️⃣ Supervised Learning
+Definition
+
+Supervised Learning is a type of Machine Learning where the model learns from labeled data.
+
+The dataset contains:
+
+Input (Features)
+Correct Output (Labels)
+
+The model learns the relationship between inputs and outputs.
+
+Example
+Study Hours	Result
+8	Pass
+2	Fail
+6	Pass
+
+Feature:
+
+Study Hours
+
+Label:
+
+Result
+
+The model learns to predict the result for new students.
+
+Real-Life Examples
+Spam Email Detection
+House Price Prediction
+Disease Prediction
+Cat vs Dog Image Classification
+2️⃣ Unsupervised Learning
+Definition
+
+Unsupervised Learning is a type of Machine Learning where the dataset contains only input features.
+
+There are no labels.
+
+The model discovers hidden patterns or groups similar data.
+
+Example
+Age	Salary
+22	₹4 LPA
+24	₹5 LPA
+50	₹20 LPA
+
+No labels such as:
+
+Premium Customer
+Regular Customer
+
+The model groups similar customers automatically.
+
+Real-Life Examples
+Customer Segmentation
+Market Basket Analysis
+Document Clustering
+Fraud Pattern Discovery
+3️⃣ Reinforcement Learning
+Definition
+
+Reinforcement Learning is a type of Machine Learning where an agent learns through trial and error.
+
+The agent interacts with the environment and receives:
+
+Reward for correct actions
+Penalty for incorrect actions
+
+The objective is to maximize total reward.
+
+Example
+
+Robot Learning
+
+Walk correctly → Reward
+Fall down → Penalty
+
+The robot gradually improves its behavior.
+
+Real-Life Examples
+Self-Driving Cars
+Chess AI
+Robot Navigation
+Game Playing AI
+Robotic Dogs
+📊 Comparison
+Supervised	Unsupervised	Reinforcement
+Has labels	No labels	Reward & Penalty
+Learns from examples	Finds hidden patterns	Learns through trial and error
+Predicts outputs	Groups similar data	Learns best actions
+🔑 Important Terms
+Feature
+
+Input variables used by the model.
+
+Examples:
+
+Age
+Salary
+Study Hours
+Label
+
+Correct output associated with each example.
+
+Examples:
+
+Pass/Fail
+Spam/Not Spam
+Cat/Dog
+Agent
+
+The learner in Reinforcement Learning.
+
+Examples:
+
+Robot
+Self-driving car
+Chess-playing AI
+Environment
+
+The world in which the agent performs actions.
+
+Reward
+
+Positive feedback for a correct action.
+
+Penalty
+
+Negative feedback for an incorrect action.
+
+🧠 Real-Life Analogy
+Supervised Learning
+
+Teacher gives:
+
+Question
+Correct Answer
+
+Student learns from examples.
+
+Unsupervised Learning
+
+Teacher gives only questions.
+
+Student groups similar questions by finding patterns.
+
+Reinforcement Learning
+
+Teacher gives:
+
+Reward for correct answer
+Penalty for wrong answer
+
+Student improves through trial and error.
+
+💼 Interview Questions
+Q1. What is filter()?
+
+filter() selects only those elements that satisfy a specified condition.
+
+Q2. Difference between map() and filter()?
+map()	filter()
+Modifies all elements	Selects matching elements
+Transformation	Selection
+Q3. What is Supervised Learning?
+
+Supervised Learning is a Machine Learning technique where the model learns from labeled data (features + labels).
+
+Q4. What is Unsupervised Learning?
+
+Unsupervised Learning is a Machine Learning technique where the model learns from unlabeled data and discovers hidden patterns.
+
+Q5. What is Reinforcement Learning?
+
+Reinforcement Learning is a Machine Learning technique where an agent learns through trial and error using rewards and penalties.
+
+Q6. Give one example of each type.
+Supervised → Spam Email Detection
+Unsupervised → Customer Segmentation
+Reinforcement → Robot Navigation
