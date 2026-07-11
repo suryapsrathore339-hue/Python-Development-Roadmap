@@ -3544,3 +3544,224 @@ Q6. Give one example of each type.
 Supervised → Spam Email Detection
 Unsupervised → Customer Segmentation
 Reinforcement → Robot Navigation
+
+
+📒 Day 16 Notes – reduce() Function & Classification vs Regression
+
+90-Day Python + AI/ML Roadmap
+Student: Surya Rathore
+Day: 16 ✅
+
+🐍 Python Development
+🔹 reduce() Function
+What is reduce()?
+
+reduce() is a function that combines all elements of an iterable into a single value.
+
+Unlike map() and filter(), reduce() is available in the functools module.
+
+Import
+from functools import reduce
+Syntax
+reduce(function, iterable)
+
+The function passed to reduce() takes two arguments:
+
+lambda x, y: ...
+x → Accumulated result
+y → Next element in the iterable
+🔹 Example 1 – Sum of Numbers
+from functools import reduce
+
+numbers = [5, 10, 15, 20]
+
+result = reduce(lambda x, y: x + y, numbers)
+
+print(result)
+
+Output
+
+50
+
+Working:
+
+5 + 10 = 15
+15 + 15 = 30
+30 + 20 = 50
+🔹 Example 2 – Product of Numbers
+from functools import reduce
+
+numbers = [2, 3, 5]
+
+result = reduce(lambda x, y: x * y, numbers)
+
+print(result)
+
+Output
+
+30
+🔹 Example 3 – Maximum Number
+from functools import reduce
+
+numbers = [12, 45, 7, 89, 34]
+
+maximum = reduce(lambda x, y: x if x > y else y, numbers)
+
+print(maximum)
+
+Output
+
+89
+🔹 Example 4 – Minimum Number
+from functools import reduce
+
+numbers = [12, 45, 7, 89, 34]
+
+minimum = reduce(lambda x, y: x if x < y else y, numbers)
+
+print(minimum)
+
+Output
+
+7
+📊 map() vs filter() vs reduce()
+Function	Purpose	Output
+map()	Transform every element	Iterable
+filter()	Select elements satisfying a condition	Iterable
+reduce()	Combine all elements	Single Value
+💡 When to Use reduce()
+
+Use reduce() when you want to:
+
+Find the sum
+Find the product
+Find the maximum value
+Find the minimum value
+Combine all elements into one result
+🤖 Machine Learning
+🔹 Prediction Problems
+
+Machine Learning prediction problems are mainly of two types:
+
+Prediction
+│
+├── Classification
+└── Regression
+1️⃣ Classification
+Definition
+
+Classification is a Machine Learning task in which the model predicts a category (class/label).
+
+The output is discrete, not continuous.
+
+Examples
+Spam / Not Spam
+Cat / Dog
+Pass / Fail
+Fraud / Genuine
+Disease / No Disease
+Real-Life Applications
+Email Spam Detection
+Face Mask Detection
+Sentiment Analysis
+Disease Detection
+Image Classification
+2️⃣ Regression
+Definition
+
+Regression is a Machine Learning task in which the model predicts a continuous numerical value.
+
+Examples
+House Price
+Salary
+Temperature
+Rainfall
+Car Mileage
+Real-Life Applications
+House Price Prediction
+Stock Price Estimation
+Weather Forecasting
+Sales Forecasting
+Demand Prediction
+📊 Classification vs Regression
+Classification	Regression
+Predicts Categories	Predicts Numerical Values
+Output is Discrete	Output is Continuous
+Spam / Not Spam	House Price
+Cat / Dog	Salary
+Pass / Fail	Temperature
+Fraud / Genuine	Rainfall Amount
+🔑 Important Terms
+Category (Class)
+
+A fixed set of possible outputs.
+
+Examples:
+
+Cat
+Dog
+Spam
+Not Spam
+Continuous Value
+
+A numerical value that can take many possible values within a range.
+
+Examples:
+
+₹45,75,000
+28.6°C
+17.3 km/L
+🧠 Easy Trick to Remember
+
+Ask yourself:
+
+Does the output belong to a category?
+
+✅ Yes → Classification
+
+Examples:
+
+Cat / Dog
+Pass / Fail
+Spam / Not Spam
+Is the output a number?
+
+✅ Yes → Regression
+
+Examples:
+
+House Price
+Salary
+Temperature
+🎯 Interview Questions
+Q1. What is reduce()?
+
+reduce() combines all elements of an iterable into a single value using a function.
+
+Q2. Why do we import reduce() from functools?
+
+Because reduce() is not a built-in function in Python; it is provided by the functools module.
+
+Q3. What is Classification?
+
+Classification is a Machine Learning task that predicts a category or class label.
+
+Q4. What is Regression?
+
+Regression is a Machine Learning task that predicts a continuous numerical value.
+
+Q5. Difference between Classification and Regression?
+Classification	Regression
+Predicts classes/categories	Predicts numbers
+Discrete output	Continuous output
+Q6. Give two examples of each.
+
+Classification
+
+Spam Detection
+Pass/Fail Prediction
+
+Regression
+
+House Price Prediction
+Salary Prediction
