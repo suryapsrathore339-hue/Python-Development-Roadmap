@@ -3765,3 +3765,74 @@ Regression
 
 House Price Prediction
 Salary Prediction
+
+
+📝 Day 17 Notes
+🐍 Python – List Comprehensions
+Definition
+
+A List Comprehension is a concise way to create a new list in a single line.
+
+Syntax
+[new_item for item in iterable]
+With Condition
+[new_item for item in iterable if condition]
+Examples
+# Squares
+numbers = [1, 2, 3, 4]
+squares = [x**2 for x in numbers]
+
+# Lowercase
+words = ["AI", "ML"]
+lower = [x.lower() for x in words]
+
+# Filter Even Numbers
+numbers = [1, 2, 3, 4, 5]
+even = [x for x in numbers if x % 2 == 0]
+Advantages
+Shorter code
+More readable
+More Pythonic
+No need for append()
+🤖 Machine Learning
+Binary Classification
+
+Definition: Predicts exactly two classes.
+
+Examples
+
+Spam / Not Spam
+Pass / Fail
+Approved / Rejected
+Fraud / Genuine
+Multi-class Classification
+
+Definition: Predicts three or more classes.
+
+Examples
+
+Digit Recognition (0–9)
+Fruit Classification
+Animal Classification
+Traffic Sign Recognition
+Binary vs Multi-class
+Binary	Multi-class
+2 classes	3 or more classes
+Yes/No	Apple/Mango/Banana
+Pass/Fail	Digits 0–9
+Spam/Not Spam	Traffic Signs
+🎯 Interview Questions
+
+Q1. What is a List Comprehension?
+A concise way to create a list in a single line.
+
+Q2. What is Binary Classification?
+A classification task with exactly two possible classes.
+
+Q3. What is Multi-class Classification?
+A classification task with three or more possible classes.
+
+Q4. Difference between Binary and Multi-class Classification?
+
+Binary → 2 classes
+Multi-class → 3 or more classes
