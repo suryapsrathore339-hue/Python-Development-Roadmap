@@ -3836,3 +3836,133 @@ Q4. Difference between Binary and Multi-class Classification?
 
 Binary → 2 classes
 Multi-class → 3 or more classes
+
+
+📒 Day 18 Notes – Dictionary Comprehensions & Logistic Regression
+🐍 Python
+Dictionary Comprehension
+Definition
+
+A Dictionary Comprehension is a concise way to create a dictionary in a single line.
+
+Syntax
+{key: value for item in iterable}
+Example 1
+numbers = [1,2,3,4]
+
+result = {x:x**2 for x in numbers}
+
+print(result)
+
+Output
+
+{1:1,2:4,3:9,4:16}
+Example 2
+words = ["apple","banana","kiwi"]
+
+result = {word:len(word) for word in words}
+
+Output
+
+{
+"apple":5,
+"banana":6,
+"kiwi":4
+}
+Example 3 (With Condition)
+numbers = [1,2,3,4,5]
+
+result = {x:x**3 for x in numbers if x%2==1}
+
+Output
+
+{
+1:1,
+3:27,
+5:125
+}
+📊 List vs Dictionary Comprehension
+List Comprehension	Dictionary Comprehension
+Creates Lists	Creates Dictionaries
+[x**2 for x in numbers]	{x:x**2 for x in numbers}
+🤖 Machine Learning
+Logistic Regression
+Definition
+
+Logistic Regression is a Supervised Machine Learning algorithm used for Classification, especially Binary Classification.
+
+Why is it called Regression?
+
+Although the name contains Regression, it does not predict continuous values.
+
+Instead:
+
+Input Features
+       ↓
+Calculates Probability (0–1)
+       ↓
+Uses Threshold (0.5)
+       ↓
+Predicts Class
+Example
+
+Spam Detection
+
+Probability = 0.91
+
+0.91 > 0.5
+
+Output = Spam
+
+Another email
+
+Probability = 0.18
+
+0.18 < 0.5
+
+Output = Not Spam
+Where is Logistic Regression Used?
+📧 Spam Detection
+🏦 Loan Approval
+❤️ Disease Prediction
+💳 Fraud Detection
+🛒 Customer Purchase Prediction
+📉 Customer Churn Prediction
+Linear Regression vs Logistic Regression
+Linear Regression	Logistic Regression
+Predicts Numbers	Predicts Categories
+Used for Regression	Used for Classification
+Example: House Price	Example: Spam Detection
+Key Terms
+Probability
+
+A value between 0 and 1 that represents how likely an event is.
+
+Examples:
+
+0.95 → Very likely
+0.50 → Uncertain
+0.10 → Very unlikely
+Threshold
+
+A cutoff value (commonly 0.5) used to convert probability into a class.
+
+Probability ≥ 0.5 → Positive Class
+Probability < 0.5 → Negative Class
+🎯 Interview Questions
+Q1. What is Logistic Regression?
+
+A supervised learning algorithm used for classification, especially binary classification.
+
+Q2. Why is Logistic Regression called Regression if it performs Classification?
+
+Because it first predicts a probability using a regression equation and then converts that probability into a class label using a threshold.
+
+Q3. What does Logistic Regression predict first?
+
+Probability (0 to 1).
+
+Q4. Give three real-life applications.
+Spam Detection
+Loan Approval
+Disease Prediction
