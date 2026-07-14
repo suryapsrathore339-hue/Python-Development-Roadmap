@@ -3966,3 +3966,110 @@ Q4. Give three real-life applications.
 Spam Detection
 Loan Approval
 Disease Prediction
+
+Day 19 Notes
+🐍 Python – Set Comprehensions
+Definition
+
+A Set Comprehension is a concise way to create a set in a single line.
+
+Syntax
+{expression for item in iterable}
+Example 1
+numbers = [1,2,2,3]
+
+result = {x for x in numbers}
+
+print(result)
+
+Output:
+
+{1, 2, 3}
+Example 2
+numbers = [1,2,3,4]
+
+result = {x**2 for x in numbers}
+
+print(result)
+
+Output:
+
+{1, 4, 9, 16}
+Example 3 (With Condition)
+numbers = [1,2,3,4,5,6]
+
+result = {x**3 for x in numbers if x % 2 == 0}
+
+print(result)
+
+Output:
+
+{8, 64, 216}
+📊 Comparison
+Comprehension	Creates
+List	List
+Dictionary	Dictionary
+Set	Set
+🤖 Machine Learning – Sigmoid Function
+Why do we need it?
+
+Logistic Regression first computes a value that can be any real number.
+
+The Sigmoid Function converts that value into a probability between 0 and 1.
+
+Any Number
+      │
+      ▼
+Sigmoid Function
+      │
+      ▼
+Probability (0–1)
+Important Properties
+Output is always between 0 and 1
+Large positive input → Output close to 1
+Large negative input → Output close to 0
+Input = 0 → Output = 0.5
+Examples
+Input	Output (Approx.)
+100	1.00
+10	0.999
+0	0.5
+-10	0.00004
+-100	0.00
+Logistic Regression Workflow
+Input Features
+       │
+       ▼
+Linear Combination
+       │
+       ▼
+Sigmoid Function
+       │
+       ▼
+Probability (0–1)
+       │
+       ▼
+Threshold (0.5)
+       │
+       ▼
+Final Class
+🎯 Interview Questions
+Q1. What is a Set Comprehension?
+
+A concise way to create a set in a single line.
+
+Q2. Why are sets useful?
+
+They automatically remove duplicate values.
+
+Q3. What is the purpose of the Sigmoid Function?
+
+It converts any real number into a probability between 0 and 1.
+
+Q4. What is the output of Sigmoid(0)?
+
+0.5
+
+Q5. Why is the Sigmoid Function used in Logistic Regression?
+
+Because Logistic Regression needs probabilities between 0 and 1 before making a classification.g
