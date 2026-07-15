@@ -4072,4 +4072,122 @@ Q4. What is the output of Sigmoid(0)?
 
 Q5. Why is the Sigmoid Function used in Logistic Regression?
 
-Because Logistic Regression needs probabilities between 0 and 1 before making a classification.g
+Because Logistic Regression needs probabilities between 0 and 1 before making a classification.
+
+📝 Day 20 Notes
+🐍 Python – Generator Expressions
+Definition
+
+A Generator Expression creates values one at a time (lazily) instead of storing all values in memory.
+
+Syntax
+(expression for item in iterable)
+Example 1
+squares = (x**2 for x in range(5))
+
+print(list(squares))
+
+Output:
+
+[0, 1, 4, 9, 16]
+Example 2
+words = (word.upper() for word in ["AI", "Python", "ML"])
+
+print(list(words))
+
+Output:
+
+['AI', 'PYTHON', 'ML']
+Example 3 (With Condition)
+even = (x for x in range(1,11) if x % 2 == 0)
+
+print(list(even))
+
+Output:
+
+[2, 4, 6, 8, 10]
+Using next()
+cubes = (x**3 for x in range(1,6))
+
+print(next(cubes))
+print(next(cubes))
+print(next(cubes))
+
+Output:
+
+1
+8
+27
+List vs Generator
+List Comprehension	Generator Expression
+Uses []	Uses ()
+Stores all values immediately	Generates values on demand
+Higher memory usage	Lower memory usage
+Best for small/medium data	Best for large datasets
+🤖 Machine Learning – Decision Boundary
+Definition
+
+A Decision Boundary is a boundary that separates different classes predicted by a classification model.
+
+Example
+
+Age vs Laptop Purchase
+
+20   22   25 | 30 | 35   40   45
+ No   No   No |    | Yes  Yes  Yes
+
+The line at 30 is the Decision Boundary.
+
+Logistic Regression Workflow
+Input Features
+      │
+      ▼
+Linear Combination
+      │
+      ▼
+Sigmoid Function
+      │
+      ▼
+Probability (0–1)
+      │
+      ▼
+Decision Boundary (Threshold = 0.5)
+      │
+      ▼
+Final Class
+Decision Rule
+Probability ≥ 0.5
+        ↓
+Positive Class
+
+Probability < 0.5
+        ↓
+Negative Class
+Real-Life Applications
+📧 Spam Detection
+💳 Fraud Detection
+🏦 Loan Approval
+❤️ Disease Prediction
+📉 Customer Churn Prediction
+🎯 Interview Questions
+Q1. What is a Generator Expression?
+
+A memory-efficient way to generate values one at a time using parentheses ().
+
+Q2. What is the advantage of a Generator?
+
+It uses less memory because values are generated only when needed.
+
+Q3. What is a Decision Boundary?
+
+A boundary that separates different classes in a classification problem.
+
+Q4. What happens if the predicted probability is 0.82?
+
+Since 0.82 ≥ 0.5, the model predicts the Positive Class.
+
+Q5. What happens if the predicted probability is 0.35?
+
+Since 0.35 < 0.5, the model predicts the Negative Class.
+
+
