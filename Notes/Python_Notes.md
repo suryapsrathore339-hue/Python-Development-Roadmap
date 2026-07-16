@@ -4191,3 +4191,127 @@ Q5. What happens if the predicted probability is 0.35?
 Since 0.35 < 0.5, the model predicts the Negative Class.
 
 
+📝 Day 21 Notes
+🐍 Python – any() and all()
+any()
+
+Returns True if at least one element is True.
+
+Example
+numbers = [False, False, True]
+
+print(any(numbers))
+
+Output:
+
+True
+all()
+
+Returns True only if every element is True.
+
+Example
+numbers = [True, True, False]
+
+print(all(numbers))
+
+Output:
+
+False
+Practical Usage
+numbers = [2,4,6,7]
+
+print(any(x % 2 == 1 for x in numbers))
+
+Output:
+
+True
+marks = [85,92,78,88]
+
+print(all(x > 70 for x in marks))
+
+Output:
+
+True
+Memory Trick
+any() → At least ONE True
+
+all() → EVERY value must be True
+🤖 Machine Learning – Confusion Matrix
+
+A Confusion Matrix evaluates the performance of a classification model.
+
+Actual	Predicted	Name
+Positive	Positive	True Positive (TP)
+Negative	Negative	True Negative (TN)
+Negative	Positive	False Positive (FP)
+Positive	Negative	False Negative (FN)
+Meanings
+✅ True Positive (TP)
+
+Actual = Positive
+Predicted = Positive
+
+Correct positive prediction.
+
+✅ True Negative (TN)
+
+Actual = Negative
+Predicted = Negative
+
+Correct negative prediction.
+
+❌ False Positive (FP)
+
+Actual = Negative
+Predicted = Positive
+
+Also called a False Alarm.
+
+Example:
+
+A genuine email is marked as spam.
+
+❌ False Negative (FN)
+
+Actual = Positive
+Predicted = Negative
+
+Also called a Missed Detection.
+
+Example:
+
+A spam email reaches your inbox.
+
+Memory Trick
+TP → Correct Positive ✅
+
+TN → Correct Negative ✅
+
+FP → False Alarm 🚨
+
+FN → Missed Detection ❌
+🎯 Interview Questions
+Q1. What does any() do?
+
+Returns True if at least one element is True.
+
+Q2. What does all() do?
+
+Returns True only if all elements are True.
+
+Q3. What is a Confusion Matrix?
+
+A table used to evaluate the performance of a classification model.
+
+Q4. What is a False Positive?
+
+A negative sample incorrectly predicted as positive.
+
+Q5. What is a False Negative?
+
+A positive sample incorrectly predicted as negative.
+
+Q6. Why are False Negatives often more dangerous?
+
+Because dangerous positive cases (e.g., spam, fraud, disease) are incorrectly classified as safe, allowing them to go undetected.
+
