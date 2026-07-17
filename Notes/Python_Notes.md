@@ -4315,3 +4315,106 @@ Q6. Why are False Negatives often more dangerous?
 
 Because dangerous positive cases (e.g., spam, fraud, disease) are incorrectly classified as safe, allowing them to go undetected.
 
+📝 Day 22 Notes
+🐍 Python – zip()
+Purpose
+
+zip() combines two or more iterables element by element.
+
+Example
+names = ["Surya", "Rahul", "Aman"]
+marks = [90, 85, 95]
+
+print(list(zip(names, marks)))
+
+Output:
+
+[('Surya', 90), ('Rahul', 85), ('Aman', 95)]
+Memory Trick
+
+Zip a jacket → joins two sides together.
+
+Similarly, zip() joins multiple iterables.
+
+🐍 Python – enumerate()
+Purpose
+
+enumerate() adds an index while iterating.
+
+Example
+fruits = ["Apple", "Banana", "Mango"]
+
+for index, fruit in enumerate(fruits):
+    print(index, fruit)
+
+Output:
+
+0 Apple
+1 Banana
+2 Mango
+Starting from 1
+for index, fruit in enumerate(fruits, start=1):
+    print(index, fruit)
+
+Output:
+
+1 Apple
+2 Banana
+3 Mango
+🤖 Machine Learning – Accuracy
+Definition
+
+Accuracy is the percentage of predictions that the model gets correct.
+
+Formula
+Accuracy=
+TP+TN+FP+FN
+TP+TN
+	​
+
+
+Where:
+
+TP = True Positive
+TN = True Negative
+FP = False Positive
+FN = False Negative
+Example
+
+If:
+
+TP = 30
+TN = 50
+FP = 10
+FN = 10
+
+Then:
+
+Accuracy = (30 + 50) / (30 + 50 + 10 + 10)
+
+= 80 / 100
+
+= 80%
+
+⚠️ Limitation of Accuracy
+
+Accuracy is not reliable for imbalanced datasets.
+
+Example:
+
+990 Healthy
+10 Sick
+
+Predicting everyone as Healthy gives 99% accuracy, but misses every sick patient.
+
+Therefore, high accuracy does not always mean a good model.
+
+🎯 Interview Questions
+What does zip() do?
+What does enumerate() do?
+How do you start enumerate() from 1?
+What is Accuracy?
+Write the Accuracy formula.
+Can a model with 99% accuracy still be bad? Why?
+Why is Accuracy not suitable for imbalanced datasets?
+
