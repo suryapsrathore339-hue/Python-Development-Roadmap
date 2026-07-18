@@ -4418,3 +4418,98 @@ Write the Accuracy formula.
 Can a model with 99% accuracy still be bad? Why?
 Why is Accuracy not suitable for imbalanced datasets?
 
+📝 Day 23 Notes
+🐍 Python – Iterators
+Definition
+
+An iterator is an object that allows you to traverse a collection one element at a time.
+
+Functions
+it = iter(numbers)
+next(it)
+iter() → Creates an iterator.
+next() → Returns the next element.
+Raises StopIteration when no elements remain.
+🐍 Generators
+Generator Expression
+gen = (x*x for x in range(1,6))
+
+Uses () instead of [].
+
+Generates values only when needed, making it memory efficient.
+
+Generator Function
+def even():
+    yield 2
+    yield 4
+    yield 6
+Uses yield.
+Pauses execution and resumes from where it left off.
+Produces values lazily.
+🔄 return vs yield
+return	yield
+Ends the function	Pauses the function
+Returns one value	Produces multiple values over time
+Doesn't remember state	Remembers state
+🤖 Machine Learning – Precision
+Definition
+
+Precision answers:
+
+Out of all the predictions that the model labeled as Positive, how many were actually Positive?
+
+Formula
+Precision=
+TP+FP
+TP
+	​
+
+	​
+
+
+Where:
+
+TP = True Positive
+FP = False Positive
+Why Precision Matters
+
+Precision is important when False Positives are costly.
+
+Examples:
+
+📧 Spam Detection
+🚨 Fraud Alerts
+🔐 Security Systems
+📧 Spam Detection Example
+
+Suppose:
+
+Model predicts 100 emails as Spam
+90 are actually spam (TP)
+10 are genuine emails marked as spam (FP)
+
+Precision:
+
+90+10
+90
+	​
+
+=90%
+
+A higher precision means fewer important emails are incorrectly marked as spam.
+
+📊 Accuracy vs Precision
+Accuracy	Precision
+Overall correct predictions	Correctness of positive predictions
+Uses TP, TN, FP, FN	Uses TP and FP
+Can mislead on imbalanced data	Better when False Positives matter
+🎯 Interview Questions
+What is an iterator?
+What is the difference between iter() and next()?
+What is a generator?
+Difference between yield and return.
+Why are generators memory efficient?
+Write the formula for Precision.
+When should Precision be preferred over Accuracy?
+Why is Precision important in spam detection?
+
