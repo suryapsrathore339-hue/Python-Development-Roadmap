@@ -4513,3 +4513,95 @@ Write the formula for Precision.
 When should Precision be preferred over Accuracy?
 Why is Precision important in spam detection?
 
+📝 Day 24 Notes
+🐍 Python – Decorators
+Definition
+
+A Decorator is a function that adds extra functionality to another function without modifying its original code.
+
+Basic Syntax
+def decorator(func):
+    def wrapper():
+        print("Before Function")
+        func()
+        print("After Function")
+    return wrapper
+
+@decorator
+def hello():
+    print("Hello!")
+
+hello()
+Why Use Decorators?
+
+Common uses:
+
+✅ Logging
+✅ Authentication
+✅ Authorization
+✅ Execution Time Measurement
+✅ API Routing
+✅ Input Validation
+Framework Examples
+FastAPI → @app.get()
+Flask → @app.route()
+Django → @login_required
+🤖 Machine Learning – Recall
+Definition
+
+Recall answers:
+
+Out of all the actual positive cases, how many did the model correctly identify?
+
+Formula
+Recall=
+TP+FN
+TP
+	​
+
+	​
+
+
+Where:
+
+TP = True Positive
+FN = False Negative
+Example
+Actual cancer patients = 100
+Correctly detected = 90
+Missed = 10
+
+Recall:
+
+90+10
+90
+	​
+
+=90%
+Why Recall Matters
+
+Recall is most important when False Negatives are dangerous.
+
+Examples:
+
+🏥 Disease Detection
+💳 Fraud Detection (missing fraud)
+🔥 Fire Detection
+🚨 Intrusion Detection
+📊 Precision vs Recall
+Precision	Recall
+Focuses on False Positives	Focuses on False Negatives
+Formula: TP / (TP + FP)	Formula: TP / (TP + FN)
+Important in Spam Detection	Important in Disease Detection
+🎯 Interview Questions
+What is a decorator?
+Why do we use decorators?
+Which symbol applies a decorator?
+Name three frameworks that use decorators.
+What is Recall?
+Write the Recall formula.
+When is Recall more important than Precision?
+What is a False Negative?
+
+
+
