@@ -4557,10 +4557,6 @@ Formula
 Recall=
 TP+FN
 TP
-	​
-
-	​
-
 
 Where:
 
@@ -4602,6 +4598,57 @@ What is Recall?
 Write the Recall formula.
 When is Recall more important than Precision?
 What is a False Negative?
+
+📝 Day 25 Notes
+🐍 Python – Regular Expressions (re)
+Import
+import re
+re.search()
+
+Searches for the first occurrence anywhere in the string.
+
+re.search("Python", text)
+re.match()
+
+Checks only the beginning of the string.
+
+re.match("Hello", text)
+re.findall()
+
+Returns all matching occurrences.
+
+re.findall("AI", text)
+Quick Comparison
+Function	Purpose
+re.search()	First match anywhere
+re.match()	Match only at the beginning
+re.findall()	Return all matches
+🤖 Machine Learning – F1 Score
+Definition
+
+F1 Score is a single metric that balances Precision and Recall.
+
+It is most useful when:
+
+The dataset is imbalanced.
+Both False Positives and False Negatives are important.
+Formula
+F1=
+Precision+Recall
+2×(Precision×Recall)
+	​
+
+Why Harmonic Mean?
+
+Unlike a simple average, the harmonic mean gives a lower score if either Precision or Recall is poor, encouraging balanced model performance.
+
+When to Use
+Metric	Best Use Case
+Accuracy	Balanced datasets
+Precision	Spam detection, fraud alerts
+Recall	Disease detection
+F1 Score	Imbalanced datasets where FP and FN both matter
+
 
 
 
