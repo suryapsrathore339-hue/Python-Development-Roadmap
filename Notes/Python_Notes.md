@@ -4650,5 +4650,63 @@ Recall	Disease detection
 F1 Score	Imbalanced datasets where FP and FN both matter
 
 
+📝 Day 26 Notes
+🐍 Python – JSON
+Import
+import json
+json.dumps()
+
+Converts a Python object → JSON string.
+
+json.dumps(student)
+json.loads()
+
+Converts a JSON string → Python object.
+
+json.loads(data)
+Memory Trick
+Function	Conversion
+json.dumps()	Python → JSON String
+json.loads()	JSON String → Python
+
+Remember: dumps and loads work with strings.
+
+🤖 Machine Learning – ROC & AUC
+ROC
+
+ROC = Receiver Operating Characteristic
+
+It plots:
+
+X-axis: False Positive Rate (FPR)
+Y-axis: True Positive Rate (TPR / Recall)
+Formulas
+
+True Positive Rate (Recall):
+
+TPR=
+TP+FN
+TP
+	​
+
+
+False Positive Rate:
+
+FPR=
+FP+TN
+FP
+	​
+
+AUC (Area Under the Curve)
+AUC	Interpretation
+1.0	Perfect classifier
+0.9+	Excellent
+0.8+	Good
+0.7+	Fair
+0.5	Random guessing
+
+Higher AUC means the model separates positive and negative classes more effectively.
+
+
 
 
