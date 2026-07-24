@@ -4707,6 +4707,47 @@ AUC	Interpretation
 
 Higher AUC means the model separates positive and negative classes more effectively.
 
+📘 Day 27 Notes
+🐍 JSON Files
+File Functions
+json.dump(obj, file)
+
+Python Object → JSON File
+
+json.load(file)
+
+JSON File → Python Object
+
+String Functions
+json.dumps(obj)
+
+Python Object → JSON String
+
+json.loads(string)
+
+JSON String → Python Object
+
+Memory Trick
+dump/load      → 📁 Files
+dumps/loads    → 📝 Strings
+🤖 Bias vs Variance
+High Bias
+Model is too simple
+Underfitting
+High training error
+High testing error
+High Variance
+Model is too complex
+Overfitting
+Low training error
+High testing error
+Goal
+
+A balanced model should:
+
+Learn meaningful patterns from training data.
+Generalize well to unseen data.
+
 
 
 
