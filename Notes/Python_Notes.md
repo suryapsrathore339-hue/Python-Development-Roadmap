@@ -4748,6 +4748,51 @@ A balanced model should:
 Learn meaningful patterns from training data.
 Generalize well to unseen data.
 
+📝 Day 28 Notes
+🐍 collections.Counter
+
+Used for counting frequencies.
+
+from collections import Counter
+
+count = Counter([1, 2, 2, 3])
+
+Output:
+
+Counter({2: 2, 1: 1, 3: 1})
+🐍 collections.defaultdict
+
+Creates missing keys automatically.
+
+from collections import defaultdict
+
+d = defaultdict(list)
+
+No need to check:
+
+if key not in d:
+
+before appending.
+
+🤖 Cross Validation
+Purpose
+
+Evaluate a model more reliably than a single train-test split.
+
+K-Fold Process
+
+For K = 5:
+
+Split data into 5 equal parts.
+Train on 4 parts.
+Test on 1 part.
+Repeat 5 times.
+Average the results.
+Advantages
+✅ More reliable evaluation
+✅ Uses all samples for testing exactly once
+✅ Less dependent on one random split
+✅ Better comparison between models
 
 
 
