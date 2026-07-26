@@ -4794,5 +4794,57 @@ Advantages
 ✅ Less dependent on one random split
 ✅ Better comparison between models
 
+📝 Day 29 Notes
+🐍 itertools
+count()
+from itertools import count
+
+Generates an infinite sequence.
+
+Example:
+
+10
+11
+12
+13
+...
+cycle()
+from itertools import cycle
+
+Repeats the elements of an iterable forever.
+
+repeat()
+from itertools import repeat
+
+Repeats the same value a fixed number of times.
+
+product()
+from itertools import product
+
+Generates the Cartesian product of iterables.
+
+🤖 Hyperparameter Tuning
+Parameters
+Learned automatically during training.
+Examples:
+Linear Regression coefficients
+Neural network weights
+Hyperparameters
+
+Chosen before training.
+
+Examples:
+
+Learning rate
+Number of neighbors (k)
+Batch size
+Epochs
+Tree depth
+Grid Search
+Tests every hyperparameter combination.
+Thorough but computationally expensive.
+Random Search
+Tests a random subset of combinations.
+Faster for large search spaces.
 
 
