@@ -4847,4 +4847,50 @@ Random Search
 Tests a random subset of combinations.
 Faster for large search spaces.
 
+📝 Day 30 Notes
+🐍 Advanced functools
+partial()
 
+Creates a new function with some arguments already fixed.
+
+from functools import partial
+
+Example:
+
+square = partial(power, exponent=2)
+lru_cache()
+
+Caches previous function results to avoid repeated computation.
+
+from functools import lru_cache
+
+Best used with recursive functions that have overlapping subproblems, such as Fibonacci.
+
+🤖 scikit-learn
+What is it?
+
+A Python library for classical machine learning.
+
+Common algorithms
+Linear Regression
+Logistic Regression
+KNN
+Decision Trees
+Random Forest
+SVM
+Naive Bayes
+K-Means
+Typical ML Workflow
+Collect Data
+      ↓
+Preprocess Data
+      ↓
+Split Train/Test
+      ↓
+Train Model
+      ↓
+Evaluate
+      ↓
+Tune Hyperparameters
+      ↓
+Deploy
