@@ -4894,3 +4894,29 @@ Evaluate
 Tune Hyperparameters
       ↓
 Deploy
+
+📝 Day 31 Notes
+🖥️ os Module
+Function	Purpose
+os.getcwd()	Current working directory
+os.listdir()	List files and folders
+os.mkdir()	Create one directory
+os.makedirs()	Create nested directories
+os.rename()	Rename file/folder
+os.remove()	Delete a file
+os.chdir()	Change current directory
+📂 Professional ML Project Structure
+Project/
+│
+├── data/
+│   ├── raw/
+│   └── processed/
+│
+├── notebooks/
+├── src/
+├── models/
+├── outputs/
+│
+├── requirements.txt
+├── README.md
+└── main.py
