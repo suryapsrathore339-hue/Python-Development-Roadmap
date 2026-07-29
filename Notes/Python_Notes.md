@@ -4920,3 +4920,29 @@ Project/
 ├── requirements.txt
 ├── README.md
 └── main.py
+
+📝 Day 32 Notes
+📂 pathlib
+Method	Purpose
+Path()	Create a path object
+.exists()	Check if a path exists
+.is_file()	Check if it's a file
+.is_dir()	Check if it's a directory
+.mkdir()	Create a directory
+.glob("*.py")	Find matching files in the current directory
+.rglob("*.py")	Find matching files recursively
+⏰ datetime
+Function	Purpose
+datetime.now()	Current date and time
+date.today()	Today's date
+strftime()	Format date/time
+Date subtraction	Calculate differences between dates
+Useful Format Codes
+Code	Meaning
+%d	Day
+%m	Month
+%Y	Four-digit year
+%H	Hour (24-hour)
+%M	Minute
+%S	Second
+
