@@ -4946,3 +4946,34 @@ Code	Meaning
 %M	Minute
 %S	Second
 
+📝 Day 33 Notes
+📋 logging
+Why use it?
+Better than print() for real applications.
+Supports different severity levels.
+Can save logs to files.
+Can include timestamps and other metadata.
+Logging Levels
+Level	Use Case
+DEBUG	Detailed debugging information
+INFO	Normal application events
+WARNING	Something unexpected happened, but execution continues
+ERROR	An operation failed
+CRITICAL	Serious problem that may stop the application
+🧩 typing
+Function Type Hints
+def add(a: int, b: int) -> int:
+    return a + b
+Variable Type Hints
+name: str = "Surya"
+age: int = 20
+Collection Type Hints
+numbers: list[int] = [1, 2, 3]
+scores: dict[str, int] = {"Math": 95}
+Optional Values
+from typing import Optional
+
+name: Optional[str]
+
+Meaning: the value may be a str or None.
+
