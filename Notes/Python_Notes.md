@@ -4993,3 +4993,315 @@ Install from Requirements
 pip install -r requirements.txt
 Deactivate
 deactivate
+
+📚 Day 35 Notes – Final Revision (Advanced Python)
+
+These notes summarize the most important concepts from the entire 35-day Advanced Python phase.
+
+1. Object-Oriented Programming (OOP)
+Four Pillars
+Encapsulation → Hide data using private members.
+Inheritance → One class acquires properties of another.
+Polymorphism → Same interface, different implementations.
+Abstraction → Hide implementation details.
+
+Example:
+
+class Animal:
+    def speak(self):
+        print("Animal Sound")
+
+class Dog(Animal):
+    def speak(self):
+        print("Bark")
+2. Exception Handling
+try:
+    x = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+finally:
+    print("Done")
+
+Keywords:
+
+try
+except
+else
+finally
+raise
+3. File Handling
+
+Read
+
+with open("file.txt", "r") as file:
+    data = file.read()
+
+Write
+
+with open("file.txt", "w") as file:
+    file.write("Hello")
+
+Modes:
+
+r
+w
+a
+x
+4. Functional Programming
+Lambda
+square = lambda x: x*x
+map()
+list(map(lambda x:x*x,[1,2,3]))
+filter()
+list(filter(lambda x:x%2==0,[1,2,3,4]))
+reduce()
+from functools import reduce
+
+reduce(lambda x,y:x+y,[1,2,3])
+5. Comprehensions
+
+List
+
+[x*x for x in range(5)]
+
+Dictionary
+
+{x:x*x for x in range(5)}
+
+Set
+
+{x*x for x in range(5)}
+6. Iterators & Generators
+
+Iterator
+
+it = iter([1,2,3])
+next(it)
+
+Generator
+
+def numbers():
+    yield 1
+    yield 2
+7. Decorators
+def decorator(func):
+    def wrapper():
+        print("Before")
+        func()
+        print("After")
+    return wrapper
+8. Regular Expressions
+import re
+
+re.search()
+
+re.findall()
+
+re.match()
+9. JSON
+
+Python → JSON
+
+json.dumps(obj)
+
+JSON → Python
+
+json.loads(data)
+
+Python Object → JSON File
+
+json.dump(obj,file)
+
+JSON File → Python Object
+
+json.load(file)
+10. Collections
+
+Counter
+
+Counter(text)
+
+DefaultDict
+
+defaultdict(list)
+11. itertools
+
+Useful functions
+
+count()
+
+cycle()
+
+repeat()
+
+product()
+12. functools
+
+Partial
+
+partial()
+
+Caching
+
+@lru_cache
+13. os
+os.getcwd()
+
+os.listdir()
+14. pathlib
+Path("file.txt")
+
+.exists()
+
+.is_file()
+
+.is_dir()
+
+.glob()
+
+.rglob()
+15. datetime
+
+Current time
+
+datetime.now()
+
+Current date
+
+date.today()
+
+Formatting
+
+strftime()
+16. logging
+
+Basic Logging
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+logging.info()
+
+logging.warning()
+
+logging.error()
+
+logging.critical()
+
+Levels
+
+DEBUG
+INFO
+WARNING
+ERROR
+CRITICAL
+17. typing
+def add(a:int,b:int)->int:
+    return a+b
+
+Collections
+
+list[int]
+
+dict[str,int]
+
+Optional
+
+Optional[str]
+
+Meaning:
+
+str | None
+18. Virtual Environment
+
+Create
+
+python -m venv venv
+
+Activate (Windows)
+
+venv\Scripts\activate
+
+Deactivate
+
+deactivate
+19. pip
+
+Install
+
+pip install numpy
+
+Installed Packages
+
+pip list
+
+Freeze
+
+pip freeze > requirements.txt
+
+Install Requirements
+
+pip install -r requirements.txt
+20. Machine Learning Fundamentals
+Regression
+
+Predicts continuous values.
+
+Example:
+
+House Price
+Temperature
+Classification
+
+Predicts categories.
+
+Example:
+
+Spam / Not Spam
+Cancer / No Cancer
+Confusion Matrix
+TP
+TN
+FP
+FN
+Precision
+
+Focuses on False Positives.
+
+Use when FP is costly.
+
+Example:
+
+Spam Detection
+Recall
+
+Focuses on False Negatives.
+
+Use when FN is costly.
+
+Example:
+
+Cancer Detection
+Disease Detection
+F1 Score
+Harmonic Mean of Precision and Recall
+
+Useful for imbalanced datasets.
+
+ROC-AUC
+
+Measures how well a classifier distinguishes between classes across different thresholds.
+
+Higher AUC = Better classifier.
+
+Cross Validation
+
+Evaluates model performance across multiple train-validation splits to estimate how well it generalizes.
+
+Hyperparameter Tuning
+
+Methods:
+
+Grid Search
+Random Search
