@@ -1,30 +1,14 @@
 from fastapi import FastAPI
 
-app = FastAPI()
-
+app=FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "Welcome to my first FastAPI server!"}
+    return {"message": "Welcome to the FastAPI"}
 
-
-@app.get("/about")
-def about():
+@app.get("/student/{student_id}")
+def get_student(student_id: int,branch: str="Smart Manufacturing"):
     return {
-        "name": "Surya Rathore",
-        "college": "IIITDM Jabalpur",
-        "branch": "Smart Manufacturing"
-    }
-
-
-@app.get("/skills")
-def skills():
-    return {
-        "skills": [
-            "Python",
-            "C++",
-            "DSA",
-            "Machine Learning",
-            "FastAPI"
-        ]
+        "student_id": student_id,
+        "branch": branch
     }

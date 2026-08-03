@@ -1,0 +1,59 @@
+📚 Day 37 Notes
+1. Path Parameters
+Used to identify a specific resource.
+Defined using {}.
+
+Example:
+
+@app.get("/student/{student_id}")
+def get_student(student_id: int):
+    return {"student_id": student_id}
+2. Query Parameters
+Used to filter, search, sort, or customize results.
+Written after ?.
+
+Example:
+
+/students?branch=CSE
+3. Combining Both
+
+Example:
+
+@app.get("/student/{student_id}")
+def get_student(student_id: int, branch: str = "Smart Manufacturing"):
+    return {
+        "student_id": student_id,
+        "branch": branch
+    }
+4. Default Values
+branch: str = "Smart Manufacturing"
+
+If the client doesn't provide branch, FastAPI uses the default value.
+
+5. Automatic Validation
+student_id: int
+
+Valid:
+
+/student/101
+
+Invalid:
+
+/student/abc
+
+FastAPI automatically returns:
+
+HTTP 422 Unprocessable Entity
+
+No extra validation code is needed.
+
+6. Testing APIs
+
+You learned two methods:
+
+Browser
+http://127.0.0.1:8000/student/101
+Swagger UI
+http://127.0.0.1:8000/docs
+
+Use Try it out → Execute to test endpoints interactively.
