@@ -135,3 +135,94 @@ Swagger UI
 http://127.0.0.1:8000/docs
 
 Use Try it out → Execute to test endpoints interactively.
+
+📝 Day 38 Notes
+1. Request Body
+Used to send data from the client to the server.
+Most commonly sent as JSON.
+
+Example:
+
+{
+  "name": "Surya",
+  "age": 20,
+  "branch": "Smart Manufacturing"
+}
+2. JSON
+Stands for JavaScript Object Notation.
+Used for exchanging data between applications.
+Stores data as key-value pairs.
+
+Rules:
+
+Keys and strings use double quotes.
+Numbers are not enclosed in quotes.
+3. Pydantic Model
+from pydantic import BaseModel
+
+class Student(BaseModel):
+    name: str
+    age: int
+    branch: str
+
+A Pydantic model:
+
+Defines the structure of incoming data.
+Specifies the expected data types.
+Automatically validates the request.
+4. POST Endpoint
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Student(BaseModel):
+    name: str
+    age: int
+    branch: str
+
+@app.post("/student")
+def create_student(student: Student):
+    return {
+        "message": "Student Created Successfully!",
+        "student": student
+    }
+5. Accessing Data
+
+Inside the endpoint:
+
+student.name
+student.age
+student.branch
+
+FastAPI converts the incoming JSON into a Student object automatically.
+
+6. Automatic Validation
+
+If:
+
+age: int
+
+and the client sends:
+
+{
+  "age": "twenty"
+}
+
+FastAPI automatically returns:
+
+HTTP 422 – Unprocessable Entity
+
+No manual validation code is required.
+
+7. Testing with Swagger UI
+
+Open:
+
+http://127.0.0.1:8000/docs
+Click POST /student
+Click Try it out
+Send JSON
+Click Execute
+
+Swagger UI makes testing APIs very easy during development.
