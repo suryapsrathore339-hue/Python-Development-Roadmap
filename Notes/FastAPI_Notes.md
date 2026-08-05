@@ -226,3 +226,17 @@ Send JSON
 Click Execute
 
 Swagger UI makes testing APIs very easy during development.
+
+students = []
+Stored in RAM.
+Data disappears when the server stops.
+Good for learning, not suitable for production.
+7. Why Databases?
+
+Databases provide:
+
+✅ Permanent storage
+✅ Efficient searching and updating
+✅ Structured organization of data
+✅ Support for multiple users
+✅ Better scalability and reliability
