@@ -240,3 +240,77 @@ Databases provide:
 ✅ Structured organization of data
 ✅ Support for multiple users
 ✅ Better scalability and reliability
+
+📝 Day 40 Notes
+1. What is a Database?
+
+A database stores data permanently on disk.
+
+Example:
+
+ID	Name	Age	Branch
+1	Surya	20	Smart Manufacturing
+
+Unlike a Python list, the data remains even after restarting the program.
+
+2. SQLite
+
+SQLite is:
+
+✅ Built into Python (sqlite3)
+✅ Lightweight
+✅ File-based
+✅ Great for learning and small to medium projects
+
+Import it with:
+
+import sqlite3
+3. Connecting to a Database
+conn = sqlite3.connect("students.db")
+
+This creates (if needed) and connects to the database file.
+
+4. Cursor
+cursor = conn.cursor()
+
+The cursor is used to execute SQL commands.
+
+5. Creating a Table
+CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    age INTEGER,
+    branch TEXT
+)
+
+Important keywords:
+
+PRIMARY KEY → Unique identifier.
+AUTOINCREMENT → IDs increase automatically.
+TEXT → String values.
+INTEGER → Numeric values.
+6. Saving Changes
+conn.commit()
+
+Without commit(), changes may not be saved to the database.
+
+7. Inserting Data
+cursor.execute(
+    """
+    INSERT INTO students(name, age, branch)
+    VALUES (?, ?, ?)
+    """,
+    ("Surya", 20, "Smart Manufacturing")
+)
+
+Using ? placeholders is the recommended and secure way to pass values.
+
+8. Reading Data
+cursor.execute("SELECT * FROM students")
+
+rows = cursor.fetchall()
+
+for row in rows:
+    print(row)
+
+fetchall() returns every row from the query result.
