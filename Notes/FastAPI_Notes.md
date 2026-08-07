@@ -314,3 +314,41 @@ for row in rows:
     print(row)
 
 fetchall() returns every row from the query result.
+
+
+📝 Day 41 Notes
+1. Connect FastAPI to SQLite
+conn = sqlite3.connect(
+    "students.db",
+    check_same_thread=False
+)
+
+cursor = conn.cursor()
+2. Create
+INSERT INTO students(name, age, branch)
+VALUES (?, ?, ?)
+3. Read
+SELECT * FROM students
+
+and:
+
+rows = cursor.fetchall()
+4. Update
+UPDATE students
+SET name = ?, age = ?, branch = ?
+WHERE id = ?
+5. Delete
+DELETE FROM students
+WHERE id = ?
+6. Save Changes
+
+For operations that modify the database:
+
+conn.commit()
+
+Remember:
+
+SELECT → read
+INSERT → create
+UPDATE → modify
+DELETE → remove
