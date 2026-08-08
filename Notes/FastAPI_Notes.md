@@ -352,3 +352,70 @@ SELECT → read
 INSERT → create
 UPDATE → modify
 DELETE → remove
+
+📝 Day 42 Notes
+1. Separation of Concerns
+
+Different parts of the application should have different responsibilities.
+
+main.py       → API
+database.py   → Database
+models.py     → Data validation
+2. Modular Programming
+
+Instead of:
+
+main.py
+ ├── Database
+ ├── Models
+ ├── API
+ ├── CRUD
+ └── Everything else
+
+we divide it into modules:
+
+main.py
+database.py
+models.py
+Benefits
+Easier maintenance
+Easier debugging
+Easier modifications
+Better readability
+Code can be reused
+3. database.py
+
+Contains database-related code:
+
+import sqlite3
+
+conn = sqlite3.connect(
+    "students.db",
+    check_same_thread=False
+)
+
+cursor = conn.cursor()
+4. models.py
+
+Contains Pydantic models:
+
+from pydantic import BaseModel
+
+class Student(BaseModel):
+    name: str
+    age: int
+    branch: str
+5. main.py
+
+Contains the API endpoints:
+
+from fastapi import FastAPI
+from database import cursor, conn
+from models import Student
+
+Then:
+
+POST
+GET
+PUT
+DELETE
