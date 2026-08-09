@@ -419,3 +419,61 @@ POST
 GET
 PUT
 DELETE
+
+📝 Day 43 Notes
+1. ORM
+
+ORM = Object-Relational Mapping
+
+It allows us to work with database tables using Python objects/classes.
+
+Database Table ↔ Python Class
+Database Row   ↔ Python Object
+2. SQLAlchemy
+
+SQLAlchemy is the ORM we used.
+
+from sqlalchemy import create_engine
+
+It connects our Python application to the database.
+
+3. SQLAlchemy Model
+class Student(Base):
+    __tablename__ = "students"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    age = Column(Integer)
+    branch = Column(String)
+
+This represents the students database table.
+
+4. Session
+db = SessionLocal()
+
+The session is used to perform database operations.
+
+Create
+db.add(student)
+db.commit()
+Read
+students = db.query(Student).all()
+Update
+student.name = "Rahul"
+db.commit()
+Delete
+db.delete(student)
+db.commit()
+🔥 Most Important Comparison
+Before — Raw SQLite
+cursor.execute("""
+INSERT INTO students(...)
+VALUES (...)
+""")
+Now — SQLAlchemy
+student = Student(...)
+db.add(student)
+db.commit()
+
+SQLAlchemy handles the underlying SQL for us.
+
