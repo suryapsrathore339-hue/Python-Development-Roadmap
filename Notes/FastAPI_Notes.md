@@ -477,3 +477,79 @@ db.commit()
 
 SQLAlchemy handles the underlying SQL for us.
 
+📝 Day 44 Notes
+1. Dependency Injection
+
+FastAPI can automatically provide things an endpoint needs.
+
+db: Session = Depends(get_db)
+2. Database Dependency
+def get_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
+
+Flow:
+
+Request
+ ↓
+get_db()
+ ↓
+Create Session
+ ↓
+yield db
+ ↓
+Endpoint
+ ↓
+finally
+ ↓
+Close Session
+3. Pydantic vs SQLAlchemy
+
+This is very important:
+
+Pydantic
+   ↓
+API input/output validation
+
+SQLAlchemy
+   ↓
+Database representation & operations
+
+Example:
+
+class StudentRequest(BaseModel):
+    name: str
+    age: int
+    branch: str
+
+vs.
+
+class Student(Base):
+    __tablename__ = "students"
+4. CRUD with Dependencies
+
+You now have:
+
+POST   /student
+GET    /students
+PUT    /student/{student_id}
+DELETE /student/{student_id}
+
+And each database endpoint can use:
+
+db: Session = Depends(get_db)
+5. db.refresh()
+
+After creating:
+
+db.add(new_student)
+db.commit()
+db.refresh(new_student)
+
+refresh() gets the latest database state back into the Python object, including generated values such as the ID.
+
+
