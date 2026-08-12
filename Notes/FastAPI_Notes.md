@@ -843,4 +843,254 @@ app.include_router()
 
 → Connects a router to the FastAPI application.
 
+📚 Day 46 Notes — Request & Response Schemas
+1. Why separate request and response schemas?
+
+A real API should control:
+
+What the client is allowed to send
+What the API returns
+
+Instead of using one schema for everything, we created separate schemas.
+
+Client
+  ↓
+Request Schema
+  ↓
+Backend
+  ↓
+Database
+  ↓
+Response Schema
+  ↓
+Client
+2. StudentCreate
+
+In schemas.py:
+
+from pydantic import BaseModel
+
+
+class StudentCreate(BaseModel):
+    name: str
+    age: int
+    branch: str
+
+This represents input coming from the client.
+
+Example:
+
+{
+    "name": "Rahul",
+    "age": 21,
+    "branch": "CSE"
+}
+
+Notice there is no id.
+
+Why?
+
+Because the database generates the ID.
+
+3. StudentResponse
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    age: int
+    branch: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+This represents data going back to the client.
+
+Example:
+
+{
+    "id": 5,
+    "name": "Rahul",
+    "age": 21,
+    "branch": "CSE"
+}
+4. response_model
+
+We can tell FastAPI exactly what the endpoint should return:
+
+@router.post("/", response_model=StudentResponse)
+
+This means:
+
+The response should follow the StudentResponse structure.
+
+FastAPI/Pydantic handles the response serialization instead of us manually creating dictionaries.
+
+5. List Response
+
+For multiple students:
+
+@router.get("/", response_model=list[StudentResponse])
+
+This means:
+
+Response
+   ↓
+List
+   ↓
+StudentResponse
+StudentResponse
+StudentResponse
+...
+
+Example:
+
+[
+    {
+        "id": 1,
+        "name": "Rahul",
+        "age": 21,
+        "branch": "CSE"
+    },
+    {
+        "id": 2,
+        "name": "Aman",
+        "age": 22,
+        "branch": "SM"
+    }
+]
+6. from_attributes=True
+
+We return a SQLAlchemy object:
+
+return new_student
+
+But new_student is a SQLAlchemy object, not a dictionary.
+
+This configuration:
+
+model_config = {
+    "from_attributes": True
+}
+
+allows Pydantic to read attributes such as:
+
+new_student.id
+new_student.name
+new_student.age
+new_student.branch
+
+and create the StudentResponse.
+
+7. Request vs Response
+
+This is one of today's most important concepts:
+
+Schema	Direction	Purpose
+StudentCreate	Client → API	Validate input
+StudentResponse	API → Client	Structure output
+
+Remember:
+
+Create = INPUT
+Response = OUTPUT
+
+8. HTTPException
+
+When a student doesn't exist:
+
+if existing_student is None:
+    raise HTTPException(
+        status_code=404,
+        detail="Student not found"
+    )
+
+The API returns:
+
+{
+    "detail": "Student not found"
+}
+
+with:
+
+HTTP 404 Not Found
+Why?
+
+Because the requested resource doesn't exist.
+
+9. Why not return a normal dictionary?
+
+Previously we might write:
+
+return {
+    "id": new_student.id,
+    "name": new_student.name,
+    "age": new_student.age,
+    "branch": new_student.branch
+}
+
+Now we can simply write:
+
+return new_student
+
+because:
+
+response_model=StudentResponse
+
+controls the response.
+
+This makes our code cleaner and easier to maintain.
+
+10. Complete Architecture
+
+Your Day 46 API now follows:
+
+                    Client
+                      │
+                      ↓
+               StudentCreate
+                      │
+                 Validation
+                      │
+                      ↓
+                 FastAPI Router
+                      │
+                      ↓
+                  SQLAlchemy
+                      │
+                      ↓
+                   SQLite
+                      │
+                      ↓
+              StudentResponse
+                      │
+                 Serialization
+                      │
+                      ↓
+                    Client
+⭐ Key Code to Remember
+Request schema
+class StudentCreate(BaseModel):
+    name: str
+    age: int
+    branch: str
+Response schema
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    age: int
+    branch: str
+
+    model_config = {
+        "from_attributes": True
+    }
+Response model
+@router.get("/", response_model=list[StudentResponse])
+Single response
+@router.post("/", response_model=StudentResponse)
+HTTP error
+raise HTTPException(
+    status_code=404,
+    detail="Student not found"
+)
+
 

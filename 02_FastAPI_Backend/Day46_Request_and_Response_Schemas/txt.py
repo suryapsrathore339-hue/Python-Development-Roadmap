@@ -1,0 +1,2 @@
+# we changed and modified the code in the routers/students.py file to use the new request and response schemas. 
+# We also added a new response_model to the get_students endpoint to return a list of StudentResponse objects.

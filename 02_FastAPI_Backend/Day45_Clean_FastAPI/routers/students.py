@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from database import get_db
 from models import Student
-from schemas import StudentRequest
+from schemas import StudentCreate, StudentResponse
 
 
 router = APIRouter(
@@ -12,27 +12,17 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/",response_model=list[StudentResponse])
 def get_students(db: Session = Depends(get_db)):
 
     students = db.query(Student).all()
 
-    result = []
-
-    for student in students:
-        result.append({
-            "id": student.id,
-            "name": student.name,
-            "age": student.age,
-            "branch": student.branch
-        })
-
-    return result
+    return students
 
 
-@router.post("/")
+@router.post("/",response_model=    StudentResponse)
 def create_student(
-    student: StudentRequest,
+    student: StudentCreate,
     db: Session = Depends(get_db)
 ):
 
@@ -46,18 +36,12 @@ def create_student(
     db.commit()
     db.refresh(new_student)
 
-    return {
-        "message": "Student created",
-        "id": new_student.id,
-        "name": new_student.name,
-        "age": new_student.age,
-        "branch": new_student.branch
-    }
+    return new_student
 
 @router.put("/{student_id}")
 def update_student(
     student_id: int,
-    student: StudentRequest,
+    student: StudentCreate,
     db: Session = Depends(get_db)
 ):
     existing_student = db.query(Student).filter(
@@ -74,13 +58,7 @@ def update_student(
     db.commit()
     db.refresh(existing_student)
 
-    return {
-        "message": "Student updated",
-        "id": existing_student.id,
-        "name": existing_student.name,
-        "age": existing_student.age,
-        "branch": existing_student.branch
-    }
+    return existing_student
 
 @router.delete("/{student_id}")
 def delete_student(
@@ -92,7 +70,10 @@ def delete_student(
     ).first()
 
     if student is None:
-        return {"message": "Student not found"}
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
 
     db.delete(student)
     db.commit()
