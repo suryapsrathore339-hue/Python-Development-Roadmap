@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -20,7 +20,7 @@ def get_students(db: Session = Depends(get_db)):
     return students
 
 
-@router.post("/",response_model=    StudentResponse)
+@router.post("/",response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 def create_student(
     student: StudentCreate,
     db: Session = Depends(get_db)
@@ -49,7 +49,10 @@ def update_student(
     ).first()
 
     if existing_student is None:
-        return {"message": "Student not found"}
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
 
     existing_student.name = student.name
     existing_student.age = student.age
@@ -60,7 +63,7 @@ def update_student(
 
     return existing_student
 
-@router.delete("/{student_id}")
+@router.delete("/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_student(
     student_id: int,
     db: Session = Depends(get_db)
