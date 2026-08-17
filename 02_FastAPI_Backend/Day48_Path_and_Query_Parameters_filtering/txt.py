@@ -1,0 +1,1 @@
+# I applied path and query parameters with filtering in routers/students.py

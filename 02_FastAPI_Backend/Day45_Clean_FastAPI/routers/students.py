@@ -12,13 +12,25 @@ router = APIRouter(
 )
 
 
-@router.get("/",response_model=list[StudentResponse])
-def get_students(db: Session = Depends(get_db)):
+@router.get("/", response_model=list[StudentResponse])
+def get_students(
+    branch: str | None = None,
+    age: int | None = None,
+    name: str | None = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Student)
 
-    students = db.query(Student).all()
+    if branch is not None:
+        query = query.filter(Student.branch == branch)
 
-    return students
+    if age is not None:
+        query = query.filter(Student.age == age)
 
+    if name is not None:
+        query = query.filter(Student.name == name)
+
+    return query.all()
 
 @router.post("/",response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 def create_student(

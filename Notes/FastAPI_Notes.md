@@ -1093,5 +1093,317 @@ raise HTTPException(
     detail="Student not found"
 )
 
+📚 Day 48 Notes — Path Parameters, Query Parameters & Filtering
+
+Today we made your FastAPI backend more flexible by allowing the client to specify which data it wants.
+
+1. Path Parameters
+
+A path parameter is part of the URL path and is generally used to identify a specific resource.
+
+Example:
+
+/students/15
+
+Here:
+
+15 → student_id
+
+FastAPI:
+
+@router.get("/{student_id}", response_model=StudentResponse)
+def get_student(
+    student_id: int,
+    db: Session = Depends(get_db)
+):
+
+Because we wrote:
+
+student_id: int
+
+FastAPI expects the path parameter to be an integer.
+
+Example
+GET /students/5
+
+means:
+
+Get the student whose ID is 5.
+
+2. Query Parameters
+
+Query parameters appear after ?.
+
+Example:
+
+/students/?branch=SM
+
+Here:
+
+branch=SM
+
+is a query parameter.
+
+FastAPI:
+
+branch: str | None = None
+
+means:
+
+branch is an optional query parameter.
+
+3. Path vs Query Parameter
+Path
+/students/5
+
+Used to identify a specific student.
+
+Query
+/students/?branch=SM
+
+Used to filter/customize a collection.
+
+Remember:
+Path  → Which specific resource?
+Query → How should I filter/customize the collection?
+4. Get One Student
+
+We created:
+
+@router.get("/{student_id}", response_model=StudentResponse)
+def get_student(
+    student_id: int,
+    db: Session = Depends(get_db)
+):
+    student = db.query(Student).filter(
+        Student.id == student_id
+    ).first()
+
+
+    if student is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
+
+
+    return student
+Flow
+GET /students/5
+       ↓
+student_id = 5
+       ↓
+SQLAlchemy searches database
+       ↓
+Student found?
+   ↙         ↘
+ Yes          No
+ ↓             ↓
+Student      404
+ ↓
+200
+5. Optional Query Parameter
+
+We used:
+
+branch: str | None = None
+
+This means the parameter is optional.
+
+Without branch:
+GET /students/
+
+→ Return all students.
+
+With branch:
+GET /students/?branch=SM
+
+→ Return only SM students.
+
+6. Filtering with SQLAlchemy
+
+We started with:
+
+query = db.query(Student)
+
+Then:
+
+if branch is not None:
+    query = query.filter(Student.branch == branch)
+
+Finally:
+
+return query.all()
+
+So:
+
+Database
+   ↓
+SQLAlchemy Query
+   ↓
+Apply filters
+   ↓
+Return matching records
+7. Multiple Filters
+
+We added:
+
+age: int | None = None
+
+and:
+
+if age is not None:
+    query = query.filter(Student.age == age)
+
+Now:
+
+GET /students/?branch=SM&age=20
+
+applies both filters.
+
+Meaning:
+
+Return students whose branch is SM AND whose age is 20.
+
+8. Name Filtering
+
+We also added:
+
+name: str | None = None
+
+and:
+
+if name is not None:
+    query = query.filter(Student.name == name)
+
+So we can use:
+
+GET /students/?name=Surya
+
+or combine:
+
+GET /students/?name=Surya&branch=SM
+9. Final GET Endpoint
+
+Your endpoint should now look like:
+
+@router.get("/", response_model=list[StudentResponse])
+def get_students(
+    branch: str | None = None,
+    age: int | None = None,
+    name: str | None = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Student)
+
+
+    if branch is not None:
+        query = query.filter(Student.branch == branch)
+
+
+    if age is not None:
+        query = query.filter(Student.age == age)
+
+
+    if name is not None:
+        query = query.filter(Student.name == name)
+
+
+    return query.all()
+
+This is a clean basic filtering implementation.
+
+10. Empty Results vs 404
+
+This was the most important distinction from today's quiz.
+
+Specific resource doesn't exist:
+GET /students/999
+
+→
+
+404 Not Found
+
+because we're asking for one specific student.
+
+Filter finds nothing:
+GET /students/?branch=ABC
+
+→
+
+[]
+
+with:
+
+200 OK
+
+because the request itself is valid; there simply aren't any matching students.
+
+Remember:
+Specific resource missing → 404
+
+
+Valid collection filter with zero matches → 200 + []
+11. Query Parameters Can Be Combined
+
+Example:
+
+/students/?branch=SM&age=20&name=Surya
+
+Contains three query parameters:
+
+branch = SM
+age    = 20
+name   = Surya
+
+The database query applies all three filters.
+
+12. Why Filter in the Database?
+
+Instead of:
+
+students = db.query(Student).all()
+
+
+for student in students:
+    # filter manually
+
+we use:
+
+query = query.filter(Student.branch == branch)
+
+This is better because the database does the filtering.
+
+Benefits:
+
+Less unnecessary data transferred
+Cleaner code
+More efficient for larger datasets
+Database engines are designed for filtering/searching
+🧠 Day 48 Cheat Sheet
+PATH PARAMETERS
+/students/5
+        ↓
+student_id = 5
+        ↓
+Specific resource
+QUERY PARAMETERS
+/students/?branch=SM
+             ↓
+          branch=SM
+             ↓
+          Filtering
+MULTIPLE QUERY PARAMETERS
+/students/?branch=SM&age=20
+             ↓
+       Branch AND Age
+Status behavior
+GET /students/999
+→ 404 if student doesn't exist
+
+
+GET /students/?branch=ABC
+→ 200 + [] if no match
+
 
 
