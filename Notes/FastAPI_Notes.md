@@ -1405,5 +1405,264 @@ GET /students/999
 GET /students/?branch=ABC
 → 200 + [] if no match
 
+📚 Day 49 Notes — Pagination & Sorting in FastAPI
+
+Today we upgraded your FastAPI student API to handle large datasets efficiently.
+
+Previously:
+
+db.query(Student).all()
+
+could return every student at once.
+
+Today we learned how to control how many records are returned, where to start, and how they are ordered.
+
+1. Pagination
+
+Pagination means dividing a large result set into smaller portions.
+
+For example, if we have 100 students and want 10 per page:
+
+Page 1 → 1–10
+Page 2 → 11–20
+Page 3 → 21–30
+...
+
+Instead of returning all 100 students at once.
+
+2. skip
+
+skip tells the database how many records to skip.
+
+/students/?skip=10
+
+means:
+
+Skip the first 10 matching records.
+
+Examples:
+
+skip=0 → start from beginning
+skip=10 → skip first 10
+skip=20 → skip first 20
+3. limit
+
+limit tells the API the maximum number of records to return.
+
+/students/?limit=5
+
+means:
+
+Return at most 5 students.
+
+Remember:
+
+limit=5
+
+means maximum 5, not minimum 5.
+
+4. offset() and limit() in SQLAlchemy
+
+We used:
+
+query.offset(skip).limit(limit).all()
+
+For example:
+
+db.query(Student).offset(10).limit(5).all()
+
+means:
+
+Skip first 10
+      ↓
+Return next 5 at most
+5. Why Pagination Matters
+
+This:
+
+db.query(Student).all()
+
+can become problematic when there are millions of records.
+
+It may:
+
+Retrieve huge amounts of data
+Consume more memory
+Increase database workload
+Increase network transfer
+Make API responses slower
+
+Pagination lets us request only what we need.
+
+6. Sorting
+
+We also added sorting.
+
+Example:
+
+/students/?sort_by=age
+
+means:
+
+Sort students by age.
+
+SQLAlchemy:
+
+query.order_by(Student.age)
+
+By default, this gives ascending order.
+
+Example:
+
+18
+19
+20
+21
+22
+7. Descending Sorting
+
+For descending order:
+
+Student.age.desc()
+
+Example:
+
+/students/?sort_by=age&order=desc
+
+Result:
+
+22
+21
+20
+19
+18
+8. Ascending vs Descending
+Student.age.asc()
+
+→ Smallest to largest
+
+Student.age.desc()
+
+→ Largest to smallest
+
+9. Controlled Sorting Fields
+
+We used:
+
+if sort_by == "name":
+    column = Student.name
+elif sort_by == "age":
+    column = Student.age
+else:
+    column = Student.id
+
+This is important because we don't blindly accept arbitrary user input as a database column.
+
+We explicitly control the allowed fields:
+
+name → Student.name
+age  → Student.age
+id   → Student.id
+
+This makes the API predictable and safer.
+
+10. Complete GET Endpoint
+
+Your current endpoint should look like:
+
+@router.get("/", response_model=list[StudentResponse])
+def get_students(
+    branch: str | None = None,
+    age: int | None = None,
+    name: str | None = None,
+    skip: int = 0,
+    limit: int = 10,
+    sort_by: str = "id",
+    order: str = "asc",
+    db: Session = Depends(get_db)
+):
+    query = db.query(Student)
+
+
+    # Filtering
+    if branch is not None:
+        query = query.filter(Student.branch == branch)
+
+
+    if age is not None:
+        query = query.filter(Student.age == age)
+
+
+    if name is not None:
+        query = query.filter(Student.name == name)
+
+
+    # Sorting
+    if sort_by == "name":
+        column = Student.name
+    elif sort_by == "age":
+        column = Student.age
+    else:
+        column = Student.id
+
+
+    if order == "desc":
+        query = query.order_by(column.desc())
+    else:
+        query = query.order_by(column.asc())
+
+
+    # Pagination
+    return query.offset(skip).limit(limit).all()
+11. Complete Request Flow
+
+A request such as:
+
+/students/?branch=SM&sort_by=age&order=desc&skip=0&limit=3
+
+is processed conceptually as:
+
+              Request
+                 ↓
+        branch = SM
+                 ↓
+          Filter database
+                 ↓
+        sort_by = age
+                 ↓
+       Sort by age
+                 ↓
+        order = desc
+                 ↓
+       Highest → lowest
+                 ↓
+          skip = 0
+                 ↓
+        limit = 3
+                 ↓
+      Return up to 3
+12. Combining Everything
+
+Your API now supports:
+
+All students
+GET /students/
+Specific student
+GET /students/5
+Filtering
+GET /students/?branch=SM
+Multiple filters
+GET /students/?branch=SM&age=20
+Pagination
+GET /students/?skip=10&limit=5
+Sorting
+GET /students/?sort_by=age&order=desc
+Everything together
+GET /students/?branch=SM&sort_by=age&order=desc&skip=0&limit=3
+
+Meaning:
+
+Find SM students → sort them by age descending → skip none → return at most 3.
+
 
 

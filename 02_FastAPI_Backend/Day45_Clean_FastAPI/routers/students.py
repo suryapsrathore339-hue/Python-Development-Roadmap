@@ -17,6 +17,10 @@ def get_students(
     branch: str | None = None,
     age: int | None = None,
     name: str | None = None,
+    skip: int = 0,
+    limit: int = 10,
+    sort_by: str = "id",
+    order: str = "asc",
     db: Session = Depends(get_db)
 ):
     query = db.query(Student)
@@ -30,7 +34,19 @@ def get_students(
     if name is not None:
         query = query.filter(Student.name == name)
 
-    return query.all()
+    if sort_by == "name":
+        column = Student.name
+    elif sort_by == "age":
+        column = Student.age
+    else:
+        column = Student.id
+
+    if order == "desc":
+        query = query.order_by(column.desc())
+    else:
+        query = query.order_by(column.asc())
+
+    return query.offset(skip).limit(limit).all()
 
 @router.post("/",response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 def create_student(
