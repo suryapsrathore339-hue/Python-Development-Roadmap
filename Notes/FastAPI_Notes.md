@@ -1664,5 +1664,91 @@ Meaning:
 
 Find SM students → sort them by age descending → skip none → return at most 3.
 
+📝 Day 50 Notes
+Dependencies
+
+A dependency is a reusable component that FastAPI automatically provides to an endpoint.
+
+Syntax:
+
+value = Depends(function)
+
+Example:
+
+db: Session = Depends(get_db)
+Dependency Injection
+
+Instead of an endpoint creating everything itself:
+
+Endpoint → create dependency
+
+FastAPI handles it:
+
+FastAPI → Dependency → Endpoint
+Service Layer
+
+Services contain application/business logic.
+
+Router
+  ↓
+Service
+  ↓
+Database
+
+Router should primarily handle HTTP concerns.
+
+Service handles operations such as:
+
+create
+read
+update
+delete
+Reusability
+
+Instead of repeating logic:
+
+student = db.query(Student)...
+
+create reusable components.
+
+You implemented this through:
+
+get_student()
+
+and:
+
+student_service.*
+⭐ Day 50 Score
+Area	Score
+Dependencies	9/10
+Dependency Injection	9/10
+Reusability	8.5/10
+Service Layer	8.5/10
+Practical implementation	10/10
+Understanding	8.5/10
+🏆 Overall: 9/10
+
+The only thing to improve is being more precise about where different responsibilities belong. You initially placed the service logic conceptually in main.py, but you corrected that quickly.
+
+📊 Roadmap Progress
+Days completed: 50 / 90
+Progress: 55.6%
+
+Python:        Days 1–35 ✅
+FastAPI:       Days 36–50 ✅
+FastAPI left:  Days 51–65
+Advanced ML:   Days 66–90
+
+And importantly, you're now moving from:
+
+"I know FastAPI"
+
+toward:
+
+"I understand how to structure a backend application."
+
+That's much more valuable for your GSoC 2027 open-source objective.
+
+
 
 
