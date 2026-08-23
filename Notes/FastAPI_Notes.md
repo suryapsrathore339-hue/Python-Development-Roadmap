@@ -1750,5 +1750,70 @@ toward:
 That's much more valuable for your GSoC 2027 open-source objective.
 
 
+📝 Day 51 Notes
+1. Python Packages
 
+A folder containing __init__.py can act as a Python package:
+
+models/
+├── __init__.py
+└── student.py
+
+__init__.py can expose objects:
+
+from .student import Student
+
+allowing:
+
+from models import Student
+2. Models vs Schemas
+
+This distinction is very important.
+
+Model:
+
+How is data stored?
+
+Example:
+
+class Student(Base):
+    ...
+
+Schema:
+
+What data does the API accept/return?
+
+Example:
+
+class StudentCreate(BaseModel):
+    ...
+3. Router
+
+Handles HTTP:
+
+GET
+POST
+PUT
+DELETE
+
+and delegates actual work.
+
+4. Service
+
+Handles operations:
+
+create_student()
+get_students()
+update_student()
+delete_student()
+5. Dependency
+
+Reusable functionality:
+
+get_student()
+
+which is used by:
+
+PUT
+DELETE
 
