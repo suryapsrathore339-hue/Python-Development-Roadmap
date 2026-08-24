@@ -1817,3 +1817,61 @@ which is used by:
 PUT
 DELETE
 
+📝 Day 52 Notes
+1. Environment Variables
+
+Used to keep configuration outside source code.
+
+DATABASE_URL=sqlite:///./students.db
+
+Instead of:
+
+DATABASE_URL = "sqlite:///./students.db"
+2. .env
+
+Contains your local configuration:
+
+DATABASE_URL=sqlite:///./students.db
+APP_NAME=Student Management API
+
+Should not be committed when it contains secrets.
+
+3. .env.example
+
+Provides a template for other developers:
+
+DATABASE_URL=
+APP_NAME=Student Management API
+
+This can safely be committed.
+
+4. Pydantic Settings
+
+You created:
+
+config/
+└── settings.py
+
+with:
+
+class Settings(BaseSettings):
+    DATABASE_URL: str
+    APP_NAME: str
+
+This provides:
+
+configuration centralization
+type validation
+environment variable loading
+cleaner application architecture
+5. settings
+
+You can now access configuration through:
+
+from config.settings import settings
+
+and:
+
+settings.DATABASE_URL
+settings.APP_NAME
+
