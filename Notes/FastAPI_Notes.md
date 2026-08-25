@@ -1875,3 +1875,299 @@ and:
 settings.DATABASE_URL
 settings.APP_NAME
 
+📚 Day 53 Notes — Authentication Fundamentals
+
+Status: 🟢 Day 53 Partially Complete
+Time: ~1 hour
+Progress: ~75%
+
+1. Authentication vs Authorization
+Authentication
+
+Answers:
+
+Who are you?
+
+Example:
+
+username + password
+        ↓
+   Authentication
+        ↓
+   User verified
+Authorization
+
+Answers:
+
+What are you allowed to do?
+
+Example:
+
+Authenticated user
+        ↓
+Is user an admin?
+        ↓
+Can DELETE students?
+
+Remember:
+
+Authentication → Who are you?
+Authorization  → What can you do?
+2. Never Store Plain-Text Passwords
+
+❌ Bad:
+
+password = "surya123"
+
+stored directly in the database.
+
+If the database is compromised, the passwords are immediately exposed.
+
+Correct approach
+Password
+   ↓
+Hash
+   ↓
+Password Hash
+   ↓
+Database
+
+Your database stores:
+
+$argon2id$...
+
+instead of:
+
+surya123
+3. Hashing vs Encryption
+Encryption
+Plain text
+    ↓
+Encryption
+    ↓
+Encrypted data
+    ↓
+Can be decrypted
+Password hashing
+Password
+    ↓
+Hashing
+    ↓
+Hash
+
+Password hashing is designed to be one-way.
+
+We don't decrypt the hash during login.
+
+4. pwdlib
+
+You installed:
+
+python -m pip install "pwdlib[argon2]"
+
+We created:
+
+utils/
+└── security.py
+security.py
+from pwdlib import PasswordHash
+
+
+password_hash = PasswordHash.recommended()
+
+
+def hash_password(password: str) -> str:
+    return password_hash.hash(password)
+
+
+def verify_password(
+    plain_password: str,
+    hashed_password: str
+) -> bool:
+    return password_hash.verify(
+        plain_password,
+        hashed_password
+    )
+5. Password Hashing Flow
+
+Registration:
+
+"surya123"
+     ↓
+hash_password()
+     ↓
+$argon2id$...
+     ↓
+Database
+
+Login:
+
+"surya123"
+     ↓
+verify_password()
+     ↓
+stored hash
+     ↓
+True / False
+
+We don't compare the plain password directly with the hash.
+
+6. Salt
+
+Two users can have the same password but different hashes.
+
+For example:
+
+User A → "password123" → hash A
+User B → "password123" → hash B
+
+The hashes don't necessarily match because password hashing uses a random salt.
+
+pwdlib handles this for us.
+
+7. User Model
+
+We created:
+
+models/
+├── __init__.py
+├── student.py
+└── user.py
+
+Our User model contains:
+
+id
+username
+email
+hashed_password
+
+Important:
+
+❌ password
+✅ hashed_password
+8. User Schemas
+
+We created:
+
+schemas/
+├── student.py
+├── user.py
+└── auth.py
+UserCreate
+
+Used during registration:
+
+{
+    "username": "surya",
+    "email": "surya@example.com",
+    "password": "surya123"
+}
+UserResponse
+
+Used when returning user information:
+
+{
+    "id": 1,
+    "username": "surya",
+    "email": "surya@example.com"
+}
+
+Notice that neither:
+
+password
+
+nor:
+
+hashed_password
+
+is returned.
+
+9. Service Layer
+
+We created:
+
+services/
+├── student_service.py
+└── user_service.py
+
+The user service handles:
+
+Create user
+    ↓
+Check duplicate username/email
+    ↓
+Hash password
+    ↓
+Create User model
+    ↓
+Commit to database
+
+This keeps business logic out of the router.
+
+10. Registration Endpoint
+
+We created:
+
+POST /auth/register
+
+Architecture:
+
+Client
+   ↓
+UserCreate
+   ↓
+Auth Router
+   ↓
+User Service
+   ↓
+hash_password()
+   ↓
+User Model
+   ↓
+Database
+
+Successful registration:
+
+201 Created
+
+Duplicate username/email:
+
+400 Bad Request
+11. Current Project Architecture
+
+Your project is becoming much more professional:
+
+Student Management API
+│
+├── config/
+│   └── settings.py
+│
+├── models/
+│   ├── __init__.py
+│   ├── student.py
+│   └── user.py
+│
+├── schemas/
+│   ├── __init__.py
+│   ├── student.py
+│   ├── user.py
+│   └── auth.py        ← started today
+│
+├── routers/
+│   ├── students.py
+│   └── auth.py
+│
+├── services/
+│   ├── student_service.py
+│   └── user_service.py
+│
+├── utils/
+│   └── security.py
+│
+├── database.py
+├── main.py
+├── .env
+├── .env.example
+└── .gitignore
+
+This is exactly the kind of modular structure we're aiming for before moving toward more advanced FastAPI/backend concepts.
