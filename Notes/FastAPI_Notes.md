@@ -2171,3 +2171,106 @@ Student Management API
 └── .gitignore
 
 This is exactly the kind of modular structure we're aiming for before moving toward more advanced FastAPI/backend concepts.
+
+📘 Day 54 — Notes
+Today's objective
+
+Understand and implement JWT-based authentication.
+
+What you completed
+
+1. Login service
+
+Implemented:
+
+authenticate_user()
+
+Flow:
+
+Username
+   ↓
+Find user
+   ↓
+Verify password hash
+   ↓
+Valid → User
+Invalid → None
+
+2. Login endpoint
+
+Implemented:
+
+POST /auth/login
+
+Invalid credentials:
+
+401 Unauthorized
+
+3. JWT fundamentals
+
+Learned:
+
+JWT
+├── Header
+├── Payload
+└── Signature
+
+Important:
+
+JWT is normally signed, not encrypted.
+
+4. JWT configuration
+
+Added:
+
+JWT_SECRET_KEY
+
+to .env and settings.
+
+5. PyJWT
+
+Installed:
+
+python -m pip install PyJWT
+
+6. Token utility
+
+Created:
+
+utils/token.py
+
+with:
+
+HS256
+30-minute expiration
+sub claim
+exp claim
+
+7. Successful login now returns
+
+{
+    "access_token": "eyJ...",
+    "token_type": "bearer"
+}
+
+And you successfully tested:
+
+Correct credentials → 200 + JWT ✅
+Wrong credentials → 401 ✅
+🧠 Architecture now
+
+Your backend has evolved significantly:
+
+                 AUTHENTICATION
+                       │
+          ┌────────────┴────────────┐
+          ↓                         ↓
+     REGISTER                      LOGIN
+          │                         │
+     Hash password            Verify password
+          │                         │
+          └────────────┬────────────┘
+                       ↓
+                  Generate JWT
+                       ↓
+                    Client
