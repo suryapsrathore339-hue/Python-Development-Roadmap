@@ -2274,3 +2274,113 @@ Your backend has evolved significantly:
                   Generate JWT
                        ↓
                     Client
+
+📘 Day 55 Notes — JWT & Protected Routes
+1. OAuth2 Bearer Token
+
+We introduced:
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/auth/login"
+)
+
+It extracts:
+
+Authorization: Bearer <JWT>
+
+from incoming requests.
+
+2. JWT Verification
+
+Created:
+
+get_current_user()
+
+The flow is:
+
+Request
+   ↓
+Extract Bearer token
+   ↓
+jwt.decode()
+   ↓
+Verify signature
+   ↓
+Check expiration
+   ↓
+Read "sub"
+   ↓
+Return username
+
+Invalid/expired token:
+
+401 Unauthorized
+3. FastAPI Security Dependency
+
+We used:
+
+username: str = Depends(get_current_user)
+
+This is important because authentication logic is now reusable.
+
+Any protected endpoint can use the same dependency.
+
+4. Protected /auth/me
+
+We created:
+
+GET /auth/me
+
+Without JWT:
+
+401 Unauthorized ❌
+
+With valid JWT:
+
+{
+    "message": "You are authenticated",
+    "username": "surya"
+}
+5. Protected Student API
+
+We applied the authentication dependency to:
+
+GET /students/
+
+Now:
+
+No JWT → 401 ❌
+Valid JWT → 200 ✅
+
+Your existing filtering, pagination, and sorting still work after authentication.
+
+🔑 Most important distinction
+Authentication
+"Who are you?"
+       ↓
+Valid JWT
+Authorization
+"What are you allowed to do?"
+       ↓
+Role / permissions
+
+A valid JWT does not mean the user is an admin.
+
+🏗️ Current architecture
+Client
+  ↓
+POST /auth/login
+  ↓
+Verify password
+  ↓
+Generate JWT
+  ↓
+Client receives token
+  ↓
+Authorization: Bearer JWT
+  ↓
+get_current_user()
+  ↓
+Verify JWT
+  ↓
+Protected endpoint

@@ -5,7 +5,8 @@ from database import get_db
 from models import Student
 from schemas import StudentCreate, StudentResponse
 from services import student_service
-from dependencies.student import get_student
+from Dependencies.student import get_student
+from Dependencies.auth import get_current_user
 
 
 router = APIRouter(

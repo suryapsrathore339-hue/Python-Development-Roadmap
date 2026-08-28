@@ -5,6 +5,7 @@ from database import get_db
 from services.user_service import create_user
 from schemas import UserCreate, UserResponse, LoginRequest
 from utils.token import create_access_token
+from Dependencies.auth import get_current_user
 
 
 router = APIRouter(
@@ -37,4 +38,13 @@ def login_user(
     return {
         "access_token": access_token,
         "token_type": "bearer"
+    }
+
+@router.get("/me")
+def get_me(
+    username: str = Depends(get_current_user)
+):
+    return {
+        "message": "You are authenticated",
+        "username": username
     }
