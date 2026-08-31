@@ -40,11 +40,15 @@ def login_user(
         "token_type": "bearer"
     }
 
+from models import User
+
+
 @router.get("/me")
 def get_me(
-    username: str = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     return {
         "message": "You are authenticated",
-        "username": username
+        "username": current_user.username,
+        "email": current_user.email
     }

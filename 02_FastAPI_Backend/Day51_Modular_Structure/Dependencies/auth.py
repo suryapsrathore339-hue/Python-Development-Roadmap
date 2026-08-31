@@ -6,13 +6,19 @@ import jwt
 from config.settings import settings
 from utils.token import ALGORITHM
 
+from sqlalchemy.orm import Session
+
+from database import get_db
+from models import User
+
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login"
 )
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme)
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -35,4 +41,11 @@ def get_current_user(
     except jwt.InvalidTokenError:
         raise credentials_exception
 
-    return username
+    user = db.query(User).filter(
+        User.username == username
+    ).first()
+
+    if user is None:
+        raise credentials_exception
+
+    return user
