@@ -2397,3 +2397,222 @@ def get_me(
         "username": current_user.username,
         "email": current_user.email
     }
+
+
+📘 Day 57 Notes — Authorization & Roles
+🎯 Main Goal
+
+Day 56 handled authentication — identifying the user.
+
+Day 57 introduced authorization — deciding what that user is allowed to do.
+
+Authentication → Who are you?
+Authorization  → What can you do?
+1. User Roles
+
+We added a role field to the User model:
+
+role = Column(
+    String,
+    default="student",
+    nullable=False
+)
+
+Our initial roles are:
+
+student
+admin
+
+So the User model conceptually becomes:
+
+User
+├── id
+├── username
+├── email
+├── hashed_password
+└── role
+2. Default Role
+
+New users should automatically become:
+
+student
+
+We do not allow the client to choose their own role during registration.
+
+Bad:
+
+role=user.role
+
+A malicious client could send:
+
+{
+    "username": "hacker",
+    "password": "123",
+    "role": "admin"
+}
+
+and potentially give themselves admin privileges.
+
+Security principle
+
+Never trust the client with privilege assignment.
+
+3. require_admin() Dependency
+
+We created:
+
+def require_admin(
+    current_user: User = Depends(get_current_user)
+):
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+
+    return current_user
+
+This dependency checks the authenticated user's role.
+
+4. Authorization Flow
+Request
+   ↓
+require_admin()
+   ↓
+get_current_user()
+   ↓
+Verify JWT
+   ↓
+Find User
+   ↓
+Check role
+   ↓
+┌───────────────┐
+│ role = admin? │
+└───────┬───────┘
+    Yes │ No
+        │
+        ↓
+     Continue
+        │
+        └──────→ 403 Forbidden
+5. Protecting an Endpoint
+
+For the DELETE student endpoint:
+
+current_user: User = Depends(require_admin)
+
+This means only authenticated administrators can execute the endpoint.
+
+The endpoint itself doesn't need to contain:
+
+if current_user.role != "admin":
+
+The authorization dependency handles it.
+
+6. Authentication vs Authorization
+
+This is one of the most important concepts.
+
+Authentication
+Who are you?
+       ↓
+JWT
+       ↓
+User
+Authorization
+What can you do?
+       ↓
+User role
+       ↓
+Permissions
+
+Example:
+
+Valid JWT
+   ↓
+User = Surya
+   ↓
+role = student
+   ↓
+DELETE student
+   ↓
+403 Forbidden
+7. 401 vs 403
+401 Unauthorized
+
+The request is not properly authenticated.
+
+Examples:
+
+No JWT
+Invalid JWT
+Expired JWT
+
+Meaning:
+
+"I don't know who you are."
+
+403 Forbidden
+
+The user is authenticated but doesn't have permission.
+
+Example:
+
+Valid JWT
+   ↓
+User identified
+   ↓
+role = student
+   ↓
+Admin endpoint
+
+Meaning:
+
+"I know who you are, but you're not allowed to do this."
+
+8. Reusable Dependencies
+
+The major architectural advantage is reusability.
+
+Instead of writing authorization logic separately in every endpoint:
+
+if current_user.role != "admin":
+    ...
+
+we can simply use:
+
+Depends(require_admin)
+
+on multiple endpoints.
+
+DELETE /students/{id} ──┐
+                        │
+POST /students/ ────────┼──→ require_admin()
+                        │
+PUT /students/{id} ────┘
+⚠️ SQLite Note
+
+We added a new column:
+
+role
+
+but your existing students.db was created before this column existed.
+
+Base.metadata.create_all() does not automatically modify an existing table's structure.
+
+The proper production solution is database migrations, which we'll cover later.
+
+Don't randomly delete your database just to fix schema changes.
+
+🧠 Day 57 Key Takeaways
+Authentication identifies the user.
+Authorization determines permissions.
+Users can have roles such as student and admin.
+New users should default to the least-privileged role.
+Never let users assign themselves privileged roles.
+require_admin() is a reusable authorization dependency.
+401 means authentication failed/missing.
+403 means authentication succeeded but permission was denied.
+FastAPI dependencies keep authorization logic clean and reusable.
+Database schema changes should eventually be handled with migrations.

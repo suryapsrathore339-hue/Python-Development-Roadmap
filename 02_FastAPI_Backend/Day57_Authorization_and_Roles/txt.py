@@ -1,0 +1,1 @@
+# Authorization and Roles in FastAPI are provided in our main directory. We have added current-user dependency in our main directory.

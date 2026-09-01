@@ -6,6 +6,8 @@ from services.user_service import create_user
 from schemas import UserCreate, UserResponse, LoginRequest
 from utils.token import create_access_token
 from Dependencies.auth import get_current_user
+from Dependencies.auth import require_admin
+from models import User
 
 
 router = APIRouter(
@@ -51,4 +53,28 @@ def get_me(
         "message": "You are authenticated",
         "username": current_user.username,
         "email": current_user.email
+    }
+
+@router.delete("/{student_id}")
+def delete_student(
+    student_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    student = db.query(User).filter(
+        User.id == student_id,
+        User.role == "student"
+    ).first()
+
+    if not student:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found"
+        )
+
+    db.delete(student)
+    db.commit()
+
+    return {
+        "message": f"Student with ID {student_id} has been deleted."
     }
