@@ -7,6 +7,7 @@ from schemas import StudentCreate, StudentResponse
 from services import student_service
 from Dependencies.student import get_student
 from Dependencies.auth import get_current_user
+from Dependencies.auth import require_role
 
 
 router = APIRouter(
@@ -74,18 +75,12 @@ def update_student(
 
 
 # DELETE student
-@router.delete(
-    "/{student_id}",
-    status_code=status.HTTP_204_NO_CONTENT
-)
+@router.delete("/{student_id}")
 def delete_student(
     student_id: int,
-    student: Student = Depends(get_student),
-    db: Session = Depends(get_db)
-):
-    student_service.delete_student(
-        db=db,
-        student=student
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        require_role("admin")
     )
-
-    return None
+):
+    # existing deletion logic

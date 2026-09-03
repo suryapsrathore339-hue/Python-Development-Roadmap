@@ -2616,3 +2616,186 @@ require_admin() is a reusable authorization dependency.
 403 means authentication succeeded but permission was denied.
 FastAPI dependencies keep authorization logic clean and reusable.
 Database schema changes should eventually be handled with migrations.
+
+📚 Day 58 — RBAC Notes
+1. What is RBAC?
+
+RBAC = Role-Based Access Control
+
+Instead of giving permissions individually to every user, we assign a role, and the role determines what the user can access.
+
+Example:
+
+Admin   → Delete students, manage users
+Teacher → View/update students
+Student → View limited information
+2. Authentication vs Authorization
+Concept	Question	Example
+Authentication	Who are you?	Is this JWT valid?
+Authorization	What can you do?	Is this user an admin?
+
+Typical flow:
+
+Request
+   ↓
+JWT Authentication
+   ↓
+Current User
+   ↓
+User's Role
+   ↓
+Permission Check
+   ↓
+Endpoint
+3. 401 vs 403
+
+This is very important.
+
+401 Unauthorized → Authentication failed.
+
+Examples:
+
+No token
+Invalid token
+Expired token
+
+403 Forbidden → User is authenticated but doesn't have permission.
+
+Example:
+
+student → tries admin endpoint
+                ↓
+              403
+4. require_role()
+
+Instead of writing separate functions like require_admin(), we created a reusable dependency:
+
+def require_role(required_role: str):
+
+    def role_checker(
+        current_user: User = Depends(get_current_user)
+    ):
+        if current_user.role != required_role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+
+        return current_user
+
+    return role_checker
+
+Usage:
+
+current_user: User = Depends(
+    require_role("admin")
+)
+
+This means:
+
+Only users whose role is "admin" can access this endpoint.
+
+5. Multiple Roles
+
+We generalized it further:
+
+def require_roles(required_roles: list[str]):
+
+    def role_checker(
+        current_user: User = Depends(get_current_user)
+    ):
+        if current_user.role not in required_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+
+        return current_user
+
+    return role_checker
+
+Usage:
+
+current_user: User = Depends(
+    require_roles(["admin", "teacher"])
+)
+
+This means:
+
+admin   → ✅
+teacher → ✅
+student → ❌
+
+It is OR, not AND.
+
+6. Never Trust the Client for Roles
+
+❌ Bad:
+
+role = request.role
+
+A malicious user could send:
+
+{
+    "role": "admin"
+}
+
+Instead, the role should come from the authenticated user stored in the database.
+
+JWT
+ ↓
+User identity
+ ↓
+Database
+ ↓
+User.role
+ ↓
+Permission check
+7. Important Security Rule
+
+When creating a user, don't allow the client to decide their role:
+
+new_user = User(
+    username=user.username,
+    email=user.email,
+    hashed_password=hashed_password
+)
+
+The database default:
+
+role = Column(
+    String,
+    default="student",
+    nullable=False
+)
+
+makes new users students by default.
+
+An administrator can later assign an appropriate role.
+
+8. Final Day 58 Architecture
+                    ┌──────────────┐
+                    │   Request    │
+                    └──────┬───────┘
+                           ↓
+                    ┌──────────────┐
+                    │     JWT      │
+                    └──────┬───────┘
+                           ↓
+                 ┌──────────────────┐
+                 │ get_current_user │
+                 └────────┬─────────┘
+                          ↓
+                    ┌────────────┐
+                    │    User    │
+                    └─────┬──────┘
+                          ↓
+                       role
+                          ↓
+             ┌──────────────────────┐
+             │  require_role(s)     │
+             └──────────┬───────────┘
+                        ↓
+                  Permission
+                        ↓
+                    Endpoint
