@@ -75,3 +75,42 @@ def require_roles(required_roles: list[str]):
         return current_user
 
     return role_checker
+
+ROLE_PERMISSIONS = {
+    "student": {
+        "student:read"
+    },
+    "teacher": {
+        "student:read",
+        "student:create",
+        "student:update"
+    },
+    "admin": {
+        "student:read",
+        "student:create",
+        "student:update",
+        "student:delete",
+        "user:manage"
+    }
+}
+
+def require_permission(required_permission: str):
+
+    def permission_checker(
+        current_user: User = Depends(get_current_user)
+    ):
+        permissions = ROLE_PERMISSIONS.get(
+            current_user.role,
+            set()
+        )
+
+        if required_permission not in permissions:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+
+        return current_user
+
+    return permission_checker
+

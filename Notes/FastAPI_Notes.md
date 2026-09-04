@@ -2799,3 +2799,143 @@ An administrator can later assign an appropriate role.
                   Permission
                         ↓
                     Endpoint
+
+
+Day 59 — Advanced Permissions: Notes
+1. Role-Based Access Control (RBAC)
+
+RBAC means permissions are assigned through roles.
+
+User → Role → Permissions
+
+Example:
+
+student → student:read
+teacher → student:read, student:create, student:update
+admin   → student:read, student:create, student:update,
+          student:delete, user:manage
+2. Role vs Permission
+
+Role-based check:
+
+require_role("admin")
+
+This asks:
+
+“Is this user an admin?”
+
+Permission-based check:
+
+require_permission("student:delete")
+
+This asks:
+
+“Does this user have permission to delete students?”
+
+Permission-based authorization is more granular and flexible.
+
+3. Permission Map
+
+Our current permission configuration:
+
+ROLE_PERMISSIONS = {
+    "student": {
+        "student:read"
+    },
+
+    "teacher": {
+        "student:read",
+        "student:create",
+        "student:update"
+    },
+
+    "admin": {
+        "student:read",
+        "student:create",
+        "student:update",
+        "student:delete",
+        "user:manage"
+    }
+}
+4. require_permission()
+def require_permission(required_permission: str):
+
+    def permission_checker(
+        current_user: User = Depends(get_current_user)
+    ):
+        permissions = ROLE_PERMISSIONS.get(
+            current_user.role,
+            set()
+        )
+
+        if required_permission not in permissions:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+
+        return current_user
+
+    return permission_checker
+
+Then an endpoint can use:
+
+current_user: User = Depends(
+    require_permission("student:delete")
+)
+
+The endpoint doesn't need to know which role the user has. It only cares whether the required capability exists.
+
+5. Least Privilege
+
+Principle of least privilege:
+
+Give every user only the permissions they actually need.
+
+For example:
+
+Student → read students
+Teacher → read + create + update
+Admin   → everything required for administration
+
+Don't give every user admin-level permissions unnecessarily.
+
+6. 401 vs 403
+Status	Meaning
+401 Unauthorized	User is not properly authenticated
+403 Forbidden	User is authenticated but doesn't have permission
+
+Example:
+
+No/invalid JWT
+      ↓
+     401
+
+Valid JWT
+   ↓
+User identified
+   ↓
+Permission missing
+   ↓
+     403
+7. Current Security Architecture
+
+Your FastAPI authentication/authorization flow is now:
+
+Request
+   ↓
+JWT Token
+   ↓
+get_current_user()
+   ↓
+Database User
+   ↓
+User's Role
+   ↓
+Role's Permissions
+   ↓
+Permission Check
+   ↓
+Endpoint
+
+This is a major step toward a production-style backend architecture.

@@ -1,0 +1,1 @@
+# Advanced permissions in FastAPI can be implemented using dependencies and custom logic to control access to different endpoints based on user roles or permissions. Below is an example of how to set up advanced permissions in a FastAPI application.
