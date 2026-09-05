@@ -1,0 +1,1 @@
+# Authentication and Security revision is done in this file. This file contains the code for authentication and security in FastAPI.
