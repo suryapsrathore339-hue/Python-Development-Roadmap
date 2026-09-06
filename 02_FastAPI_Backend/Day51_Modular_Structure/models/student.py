@@ -26,3 +26,15 @@ class Student(Base):
         String,
         nullable=False
     )
+
+# Student
+created_by = Column(
+    Integer,
+    ForeignKey("users.id"),
+    nullable=True
+)
+
+creator = relationship(
+    "User",
+    back_populates="students"
+)
