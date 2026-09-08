@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from models import Student
 from schemas import StudentCreate
@@ -58,6 +59,71 @@ def get_students(
 
     # Pagination
     return query.offset(skip).limit(limit).all()
+
+
+def get_adult_cse_students(db: Session):
+    students = db.query(Student).filter(
+        Student.age >= 18,
+        Student.branch == "CSE"
+    ).all()
+
+    return students
+
+
+def get_cse_or_ece_students(db: Session):
+    students = db.query(Student).filter(
+        or_(
+            Student.branch == "CSE",
+            Student.branch == "ECE"
+        )
+    ).all()
+
+    return students
+
+
+def count_cse_students(db: Session):
+    count = db.query(Student).filter(
+        Student.branch == "CSE"
+    ).count()
+
+    return count
+
+
+def update_student_age(
+    db: Session,
+    student_id: int
+):
+    student = db.query(Student).filter(
+        Student.id == student_id
+    ).first()
+
+    if student is None:
+        return None
+
+    student.age = 21
+
+    db.commit()
+    db.refresh(student)
+
+    return student
+
+
+def delete_student(
+    db: Session,
+    student_id: int
+):
+    student = db.query(Student).filter(
+        Student.id == student_id
+    ).first()
+
+    if student is None:
+        return None
+
+    db.delete(student)
+    db.commit()
+
+    return student
+
 
 def update_student(
     db: Session,

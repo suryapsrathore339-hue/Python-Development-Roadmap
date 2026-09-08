@@ -2939,3 +2939,422 @@ Permission Check
 Endpoint
 
 This is a major step toward a production-style backend architecture.
+
+📘 Day 61 — SQLAlchemy Relationships
+🎯 Goal
+
+Learn how to connect different database tables using Foreign Keys + SQLAlchemy ORM relationships.
+
+1. Why relationships?
+
+Real applications rarely have everything in one table.
+
+For example:
+
+User
+ ├── Student
+ ├── Student
+ └── Student
+
+One user can create/manage multiple students.
+
+Instead of storing everything together, we use separate tables and connect them.
+
+2. Foreign Key
+
+A Foreign Key creates a relationship at the database level.
+
+created_by = Column(
+    Integer,
+    ForeignKey("users.id")
+)
+
+This means:
+
+students.created_by
+        ↓
+     users.id
+
+So created_by stores the ID of the user who created that student.
+
+Remember
+
+ForeignKey() = database-level connection
+
+3. relationship()
+
+SQLAlchemy's relationship() provides convenient ORM-level navigation between related objects.
+
+Example:
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+
+    students = relationship(
+        "Student",
+        back_populates="creator"
+    )
+
+and:
+
+class Student(Base):
+    __tablename__ = "students"
+
+    id = Column(Integer, primary_key=True)
+
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id")
+    )
+
+    creator = relationship(
+        "User",
+        back_populates="students"
+    )
+4. back_populates
+
+These two:
+
+User.students
+
+and
+
+Student.creator
+
+represent both sides of the same relationship.
+
+User.students
+      ↕
+Student.creator
+
+back_populates tells SQLAlchemy that these attributes are connected.
+
+5. One-to-Many Relationship
+
+Our example is:
+
+One User
+   |
+   |------ Student
+   |------ Student
+   |------ Student
+
+Therefore:
+
+User → Students = One-to-Many
+
+And from the other direction:
+
+Student → User = Many-to-One
+
+6. Accessing Related Objects
+
+Suppose:
+
+user = db.query(User).first()
+
+You can access that user's students:
+
+user.students
+
+This gives the related Student objects.
+
+Similarly:
+
+student = db.query(Student).first()
+
+You can find its creator:
+
+student.creator
+
+which gives the associated User.
+
+7. Important Difference
+ForeignKey
+ForeignKey("users.id")
+
+Answers:
+
+How are the tables connected in the database?
+
+relationship()
+relationship("User")
+
+Answers:
+
+How can I navigate between related Python/ORM objects?
+
+This distinction is very important.
+
+8. Complete Relationship
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+
+    students = relationship(
+        "Student",
+        back_populates="creator"
+    )
+
+
+class Student(Base):
+    __tablename__ = "students"
+
+    id = Column(Integer, primary_key=True)
+
+    created_by = Column(
+        Integer,
+        ForeignKey("users.id")
+    )
+
+    creator = relationship(
+        "User",
+        back_populates="students"
+    )
+
+Conceptually:
+
+        users
+      ┌───────┐
+      │ id    │
+      └───┬───┘
+          │
+          │ ForeignKey
+          ↓
+     students
+   ┌─────────────┐
+   │ created_by  │
+   └─────────────┘
+⚠️ Important Project Note
+
+Your existing SQLite database was created before this relationship was introduced.
+
+Base.metadata.create_all() does not modify an already-existing table to add a new column.
+
+So if we add:
+
+created_by = Column(...)
+
+to the existing Student table, we need to handle the database schema change properly rather than blindly relying on create_all().
+
+This is one reason database migrations (such as Alembic) are important in real FastAPI projects.
+
+🧠 Day 61 Key Takeaways
+
+Memorize these:
+
+ForeignKey
+    ↓
+Database-level relationship
+
+relationship()
+    ↓
+ORM-level navigation
+
+back_populates
+    ↓
+Connects both ORM sides
+
+User → Students
+    ↓
+One-to-Many
+
+Student → User
+    ↓
+Many-to-One
+
+📘 Day 62 — Advanced SQLAlchemy Database Operations
+1. filter() vs filter_by()
+filter()
+
+Used for complex conditions and comparisons:
+
+students = db.query(Student).filter(
+    Student.age >= 18,
+    Student.branch == "CSE"
+).all()
+
+Multiple conditions inside filter() are AND conditions.
+
+Equivalent SQL idea:
+
+WHERE age >= 18 AND branch = 'CSE'
+filter_by()
+
+Best for simple equality:
+
+students = db.query(Student).filter_by(
+    branch="CSE"
+).all()
+
+Remember:
+
+filter()     → complex conditions
+filter_by()  → simple equality
+2. AND and OR
+AND
+students = db.query(Student).filter(
+    Student.age >= 18,
+    Student.branch == "CSE"
+).all()
+
+Both conditions must be true.
+
+OR
+
+Import:
+
+from sqlalchemy import or_
+
+Then:
+
+students = db.query(Student).filter(
+    or_(
+        Student.branch == "CSE",
+        Student.branch == "ECE"
+    )
+).all()
+
+This returns students from CSE OR ECE.
+
+3. first(), all(), count()
+first()
+
+Returns one object or None.
+
+student = db.query(Student).filter(
+    Student.id == student_id
+).first()
+
+Useful when searching by ID.
+
+all()
+
+Returns a list:
+
+students = db.query(Student).all()
+count()
+
+Returns the number of matching records:
+
+count = db.query(Student).filter(
+    Student.branch == "CSE"
+).count()
+Quick revision
+first() → one object / None
+all()   → list of objects
+count() → number
+4. Updating a record
+
+Typical pattern:
+
+student = db.query(Student).filter(
+    Student.id == student_id
+).first()
+
+if student is None:
+    return None
+
+student.age = 21
+
+db.commit()
+db.refresh(student)
+
+return student
+Important sequence
+Find
+ ↓
+Check
+ ↓
+Modify
+ ↓
+commit()
+ ↓
+refresh()
+ ↓
+Return
+
+commit() saves the change to the database.
+
+refresh() gets the latest database state back into the SQLAlchemy object.
+
+5. Deleting a record
+student = db.query(Student).filter(
+    Student.id == student_id
+).first()
+
+if student is None:
+    return None
+
+db.delete(student)
+db.commit()
+
+return student
+
+Sequence:
+
+Find
+ ↓
+Check
+ ↓
+db.delete()
+ ↓
+commit()
+6. join()
+
+join() lets you query data involving related tables.
+
+Example:
+
+results = db.query(Student).join(
+    User,
+    Student.created_by == User.id
+).all()
+
+Or, when the SQLAlchemy relationship is configured:
+
+results = db.query(Student).join(
+    Student.creator
+).all()
+
+Conceptually:
+
+User
+  │
+  │ 1
+  │
+  └──────< many
+             │
+          Student
+
+This is especially useful when your backend has users, students, orders, products, etc.
+
+🧠 Day 62 Cheat Sheet
+Operation	Purpose
+filter()	Complex conditions
+filter_by()	Simple equality
+or_()	OR conditions
+first()	First matching object
+all()	All matching objects
+count()	Number of matches
+commit()	Save DB changes
+refresh()	Refresh object from DB
+db.delete()	Delete record
+join()	Combine related tables
+🔥 Most important pattern
+student = db.query(Student).filter(
+    Student.id == student_id
+).first()
+
+if student is None:
+    return None
+
+student.age = 21
+
+db.commit()
+db.refresh(student)
+
+return student
