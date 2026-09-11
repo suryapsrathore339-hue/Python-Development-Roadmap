@@ -3358,3 +3358,207 @@ db.commit()
 db.refresh(student)
 
 return student
+
+📘 Day 63 — Advanced Pydantic Validation
+1. Field() — Built-in Validation
+
+Pydantic's Field() lets us define constraints directly on schema fields.
+
+from pydantic import BaseModel, Field
+
+class StudentCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=50)
+    age: int = Field(ge=16, le=100)
+    branch: str = Field(min_length=2, max_length=20)
+Common constraints
+Constraint	Meaning
+ge=16	≥ 16
+gt=16	> 16
+le=100	≤ 100
+lt=100	< 100
+min_length=2	Minimum string length
+max_length=50	Maximum string length
+
+FastAPI automatically returns 422 Unprocessable Entity when validation fails.
+
+2. field_validator
+
+Used when built-in validation isn't enough and we need custom logic.
+
+from pydantic import field_validator
+
+@field_validator("name")
+@classmethod
+def validate_name(cls, value):
+    ...
+    return value
+Important
+
+@classmethod is required with this Pydantic validator style.
+
+3. Cleaning Input with strip()
+@field_validator("name")
+@classmethod
+def validate_name(cls, value):
+    value = value.strip()
+
+    if not value:
+        raise ValueError("Name cannot be empty")
+
+    return value
+
+Example:
+
+"   Surya   " → "Surya"
+"      "      → rejected
+4. Normalizing Input
+
+For branch:
+
+@field_validator("branch")
+@classmethod
+def normalize_branch(cls, value):
+    return value.strip().upper()
+
+Example:
+
+" cse " → "CSE"
+" sm "  → "SM"
+" Ece " → "ECE"
+
+This keeps data consistent in the database.
+
+5. Complete StudentCreate
+from pydantic import BaseModel, Field, field_validator
+
+
+class StudentCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=50)
+    age: int = Field(ge=16, le=100)
+    branch: str = Field(min_length=2, max_length=20)
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, value):
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Name cannot be empty")
+
+        return value
+
+    @field_validator("branch")
+    @classmethod
+    def normalize_branch(cls, value):
+        return value.strip().upper()
+6. Request vs Response Schema
+Request
+
+StudentCreate controls what the client is allowed to send.
+
+class StudentCreate(BaseModel):
+    name: str
+    age: int
+    branch: str
+Response
+
+StudentResponse controls what the API is allowed to return.
+
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    age: int
+    branch: str
+
+    class Config:
+        from_attributes = True
+Why separate them?
+
+A database model may contain sensitive/internal fields, while the response should expose only safe public fields.
+
+Never return password/password hash through a response schema.
+
+7. from_attributes = True
+class Config:
+    from_attributes = True
+
+This allows Pydantic to create the response schema from an ORM/SQLAlchemy object.
+
+Conceptually:
+
+SQLAlchemy Student object
+          ↓
+   StudentResponse
+          ↓
+      JSON response
+8. Nested Pydantic Schemas
+
+A Pydantic schema can contain another Pydantic schema.
+
+from pydantic import BaseModel, EmailStr
+
+
+class UserInfo(BaseModel):
+    username: str
+    email: EmailStr
+
+
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    age: int
+    branch: str
+    creator: UserInfo
+
+    class Config:
+        from_attributes = True
+
+This produces:
+
+{
+    "id": 1,
+    "name": "Surya",
+    "age": 20,
+    "branch": "SM",
+    "creator": {
+        "username": "admin",
+        "email": "admin@example.com"
+    }
+}
+9. Why UserInfo Instead of the Full User?
+
+We create a safe public schema:
+
+class UserInfo(BaseModel):
+    username: str
+    email: EmailStr
+
+instead of exposing the complete database User.
+
+This prevents accidental exposure of things such as:
+
+password
+password_hash
+internal fields
+Principle
+
+Database model ≠ API response model
+
+10. User Schema Validation
+
+Your updated user.py follows the same principle:
+
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+EmailStr automatically validates email format.
+
+For example:
+
+surya@gmail.com     → valid
+surya@              → invalid
+hello               → invalid
+
+And UserResponse deliberately does not contain the password.
