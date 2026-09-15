@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models import Student
+from models import Student, User
 from schemas import StudentCreate, StudentResponse
 from services import student_service
 from Dependencies.student import get_student
@@ -84,3 +84,4 @@ def delete_student(
     )
 ):
     # existing deletion logic
+    pass
