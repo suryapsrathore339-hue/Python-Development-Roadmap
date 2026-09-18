@@ -269,3 +269,68 @@ Underfitting	Train poor, test poor
 Data leakage	Unwanted information enters training
 Coefficient	Learned association, not automatically causation
 Gradient descent	Moves parameters toward lower loss
+
+📌 Day 67 Notes: Multiple Linear Regression & Evaluation
+
+1. Multiple Linear Regression
+
+ŷ = w₁x₁ + w₂x₂ + ... + wₙxₙ + b
+
+Uses multiple features to predict the target.
+
+2. Coefficients
+A coefficient represents the model's learned relationship with the target while accounting for the other included features.
+It does not automatically imply causation.
+
+3. Multicollinearity
+When input features are strongly correlated.
+
+Example:
+
+Age ↔ YearsExperience
+
+Can cause:
+
+unstable coefficients
+unexpected positive/negative coefficients
+sensitivity to small dataset changes
+
+4. Feature Scaling
+
+Standardization:
+
+z = (x - mean) / standard_deviation
+
+Using:
+
+StandardScaler()
+
+Especially important for:
+
+KNN
+K-Means
+SVM
+Logistic Regression
+Neural Networks
+
+Usually not necessary for ordinary Linear Regression.
+
+5. Train / Validation / Test
+
+TRAIN       → Learn parameters
+VALIDATION  → Choose/tune model
+TEST        → Final evaluation
+
+6. Cross-Validation
+
+With 5-fold CV:
+
+Fold 1 → validation
+Fold 2 → validation
+Fold 3 → validation
+Fold 4 → validation
+Fold 5 → validation
+
+Every sample gets used for validation once, and the scores are averaged.
+
+cross_val_score(model, X, y, cv=5, scoring="r2")
