@@ -334,3 +334,123 @@ Fold 5 → validation
 Every sample gets used for validation once, and the scores are averaged.
 
 cross_val_score(model, X, y, cv=5, scoring="r2")
+
+📚 Day 68 Notes — Polynomial Regression + Bias–Variance
+1. Why Polynomial Regression?
+
+Linear Regression assumes a roughly linear relationship:
+
+$$ y=w_1x+b $$
+
+But real relationships can be curved.
+
+Polynomial Regression adds powers of the features:
+
+$$ y=w_0+w_1x+w_2x^2+\cdots+w_nx^n $$
+
+Example:
+
+Degree 1 → y = w0 + w1x
+Degree 2 → y = w0 + w1x + w2x²
+Degree 3 → y = w0 + w1x + w2x² + w3x³
+
+Important: Polynomial Regression is still based on Linear Regression. It first transforms the features, then Linear Regression learns the coefficients.
+
+2. PolynomialFeatures
+from sklearn.preprocessing import PolynomialFeatures
+
+poly = PolynomialFeatures(degree=2)
+
+X_train_poly = poly.fit_transform(X_train)
+X_test_poly = poly.transform(X_test)
+
+Then:
+
+model = LinearRegression()
+model.fit(X_train_poly, y_train)
+
+y_pred = model.predict(X_test_poly)
+fit_transform() vs transform()
+Training data → fit_transform()
+Testing data  → transform()
+
+General rule for learned preprocessing:
+
+Fit only on training data.
+
+3. Model Complexity
+
+Polynomial degree controls model flexibility.
+
+Degree	Complexity
+1	Low
+2	Moderate
+3	Higher
+Very high	Very high
+
+Higher degree allows the model to capture more complicated patterns, but also increases the risk of overfitting.
+
+4. Underfitting
+
+The model is too simple to capture the underlying pattern.
+
+Typical behavior:
+
+Training error → High
+Validation error → High
+
+Usually associated with:
+
+High Bias
+
+Example: using a straight line for a strongly curved relationship.
+
+5. Overfitting
+
+The model becomes too complex and starts learning noise/details specific to the training data.
+
+Typical behavior:
+
+Training error → Very Low
+Validation/Test error → High
+
+Usually associated with:
+
+High Variance
+
+Example: using a very high-degree polynomial for a small dataset.
+
+6. Bias–Variance Tradeoff
+
+As model complexity increases:
+
+Complexity ↑
+      ↓
+Bias generally ↓
+Variance generally ↑
+
+We want a balance.
+
+Conceptually:
+
+Validation Error
+      ↑
+      | \       /
+      |  \_____/
+      |    ↑
+      |  Best
+      +----------------→ Model Complexity
+
+The goal is good generalization, not minimum training error.
+
+7. Why Training Error Alone Is Dangerous
+
+Suppose:
+
+Degree 1 → Training error = 10
+Degree 5 → Training error = 2
+Degree 15 → Training error = 0.1
+
+It does not automatically mean Degree 15 is best.
+
+Degree 15 may have memorized the training data.
