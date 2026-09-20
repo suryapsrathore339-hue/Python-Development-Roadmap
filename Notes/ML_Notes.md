@@ -454,3 +454,263 @@ Degree 15 → Training error = 0.1
 It does not automatically mean Degree 15 is best.
 
 Degree 15 may have memorized the training data.
+
+📚 Day 69 Notes — Regularization: Ridge & Lasso
+1. What is Regularization?
+
+Regularization is a technique used to reduce overfitting by adding a penalty for large model coefficients.
+
+Normal Linear Regression minimizes:
+
+$$ MSE $$
+
+Regularized regression minimizes:
+
+$$ MSE + \text{Penalty} $$
+
+The goal is:
+
+Fit the data well while keeping the model from becoming unnecessarily complex.
+
+2. Why Regularization?
+
+From Day 68:
+
+Model complexity ↑
+        ↓
+Overfitting risk ↑
+
+Regularization provides a way to control that complexity.
+
+Complex model
+     ↓
+Large coefficients
+     ↓
+Regularization penalty
+     ↓
+Coefficients shrink
+     ↓
+Less aggressive model
+     ↓
+Potentially better generalization
+3. Ridge Regression — L2
+
+Ridge uses the squared coefficients as the penalty:
+
+$$ Loss = MSE + \lambda\sum_{j=1}^{n}w_j^2 $$
+
+In scikit-learn:
+
+from sklearn.linear_model import Ridge
+
+model = Ridge(alpha=1.0)
+Effect
+
+Ridge generally:
+
+Shrinks coefficients toward zero
+Reduces model complexity
+Helps control overfitting
+Usually does not make coefficients exactly zero
+Memory trick
+
+Ridge → Reduce coefficient size
+
+4. Lasso Regression — L1
+
+Lasso uses the absolute value of coefficients:
+
+$$ Loss = MSE + \lambda\sum_{j=1}^{n}|w_j| $$
+
+In scikit-learn:
+
+from sklearn.linear_model import Lasso
+
+model = Lasso(alpha=1.0)
+
+Lasso can force some coefficients to become exactly zero.
+
+Therefore, it can perform feature selection.
+
+Memory trick
+
+Lasso → Leaves some features out
+
+5. Ridge vs Lasso
+Property	Ridge	Lasso
+Regularization	L2	L1
+Penalty	\(w^2\)	(
+Shrinks coefficients	✅	✅
+Can make coefficient exactly 0	Usually no	✅
+Feature selection	Limited	✅
+6. What is alpha?
+
+alpha controls the strength of regularization.
+
+Ridge(alpha=0.01)
+Ridge(alpha=1)
+Ridge(alpha=100)
+
+Conceptually:
+
+alpha ↑
+   ↓
+Penalty ↑
+   ↓
+Coefficient constraint ↑
+   ↓
+Model flexibility ↓
+
+But:
+
+Higher alpha is NOT automatically better.
+
+Too little regularization
+Weak penalty
+    ↓
+Model remains very flexible
+    ↓
+Overfitting may remain
+Too much regularization
+Very strong penalty
+    ↓
+Coefficients heavily shrink
+    ↓
+Model becomes too constrained
+    ↓
+Underfitting
+
+Therefore, alpha is a hyperparameter that should be selected using validation or cross-validation.
+
+7. Why Scaling Matters
+
+Suppose we have:
+
+Feature A → 0–1
+Feature B → 0–100000
+
+Regularization acts on coefficients, and feature scale affects coefficient magnitude.
+
+Therefore, Ridge/Lasso generally work better with standardized features:
+
+from sklearn.preprocessing import StandardScaler
+
+Typical workflow:
+
+X
+↓
+StandardScaler
+↓
+Ridge/Lasso
+8. Pipelines
+
+A clean implementation is:
+
+from sklearn.pipeline import Pipeline
+
+model = Pipeline([
+    ("scaler", StandardScaler()),
+    ("ridge", Ridge(alpha=1.0))
+])
+
+Then:
+
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+The pipeline ensures preprocessing is handled consistently and helps prevent data leakage during cross-validation.
+
+9. Polynomial Regression + Regularization
+
+This connects directly to Day 68.
+
+Day 68:
+
+Polynomial degree ↑
+       ↓
+Complexity ↑
+       ↓
+Overfitting risk ↑
+
+Day 69:
+
+Polynomial features
+       ↓
+Many coefficients
+       ↓
+Potential overfitting
+       ↓
+Ridge/Lasso
+       ↓
+Penalize coefficients
+       ↓
+Control complexity
+
+Example:
+
+model = Pipeline([
+    ("poly", PolynomialFeatures(degree=5)),
+    ("scaler", StandardScaler()),
+    ("ridge", Ridge(alpha=1.0))
+])
+10. Your Experiment
+
+You tested:
+
+Alpha	MAE	RMSE	R²
+0.01	0.464	0.566	0.9998
+1	2.703	2.711	0.9950
+100	28.802	28.974	0.4336
+
+The important observation:
+
+alpha = 0.01
+↓
+Weak regularization
+↓
+Very flexible model
+
+alpha = 1
+↓
+Stronger regularization
+↓
+Still captures the pattern
+
+alpha = 100
+↓
+Very strong regularization
+↓
+Model becomes too constrained
+↓
+Underfitting
+
+⚠️ This experiment had only 10 samples and 2 test samples, so these scores demonstrate the concept rather than establishing a generally optimal alpha.
+
+🧠 Day 69 Mental Model
+
+Remember this:
+
+Overfitting
+    ↓
+Need to control complexity
+    ↓
+Regularization
+    ↓
+       ┌──────────────┐
+       │              │
+     Ridge          Lasso
+      L2              L1
+       ↓               ↓
+   Shrinks         Can make
+ coefficients      coefficients
+                   exactly 0
+🔑 Must-remember points
+Ridge = L2 regularization.
+Lasso = L1 regularization.
+Ridge shrinks coefficients.
+Lasso can make coefficients exactly zero.
+alpha controls regularization strength.
+Very large alpha can cause underfitting.
+Feature scaling is important for regularized models.
+alpha should be selected using validation/CV.
+Regularization is primarily about better generalization, not simply reducing training error.
