@@ -714,3 +714,196 @@ Very large alpha can cause underfitting.
 Feature scaling is important for regularized models.
 alpha should be selected using validation/CV.
 Regularization is primarily about better generalization, not simply reducing training error.
+
+📚 Day 70 Notes — Logistic Regression & Classification
+1. Regression vs Classification
+
+Regression predicts a continuous numerical value:
+
+Salary → ₹70,000
+Temperature → 32.5°C
+House price → ₹65 lakh
+
+Classification predicts a category/class:
+
+Spam / Not Spam
+Pass / Fail
+Disease / No Disease
+
+Binary classification:
+
+$$ y\in\{0,1\} $$
+2. Why Not Use Linear Regression?
+
+Linear Regression can produce values outside the range [0,1].
+
+For classification, we often need:
+
+$$ 0\leq P(y=1)\leq1 $$
+
+So Logistic Regression uses the sigmoid function.
+
+$$ \sigma(z)=\frac{1}{1+e^{-z}} $$
+
+It maps any real number to a value between 0 and 1.
+
+Important values:
+
+$$ \sigma(0)=0.5 $$ $$ \sigma(-\infty)\rightarrow0 $$ $$ \sigma(+\infty)\rightarrow1 $$
+3. Logistic Regression
+
+Despite its name, Logistic Regression is primarily a classification algorithm.
+
+First:
+
+$$ z=w_1x_1+w_2x_2+\cdots+w_nx_n+b $$
+
+Then:
+
+$$ P(y=1|X)=\frac{1}{1+e^{-z}} $$
+Complete flow
+Features
+   ↓
+Linear combination
+z = wX + b
+   ↓
+Sigmoid
+   ↓
+Probability
+   ↓
+Threshold
+   ↓
+Class
+4. Probability → Class
+
+With the default threshold of 0.5:
+
+P(class 1) >= 0.5 → class 1
+P(class 1) <  0.5 → class 0
+
+Examples:
+
+0.82 → 1
+0.73 → 1
+0.49 → 0
+0.13 → 0
+
+The threshold can be changed depending on the application, which becomes important when we study precision and recall.
+
+5. predict() vs predict_proba()
+predict()
+
+Returns the predicted class:
+
+y_pred = model.predict(X_test)
+
+Example:
+
+[1 0 1 1]
+predict_proba()
+
+Returns probability for each class:
+
+y_prob = model.predict_proba(X_test)
+
+Example:
+
+[[0.02, 0.98],
+ [0.98, 0.02]]
+
+Columns:
+
+Column 0 → P(class 0)
+Column 1 → P(class 1)
+6. Decision Boundary
+
+The standard classification threshold is:
+
+$$ P(y=1)=0.5 $$
+
+Since:
+
+$$ \sigma(0)=0.5 $$
+
+the decision boundary occurs when:
+
+$$ z=0 $$
+
+Therefore:
+
+$$ wX+b=0 $$
+
+For two features:
+
+$$ w_1x_1+w_2x_2+b=0 $$
+
+This gives a linear decision boundary.
+
+7. Example
+
+Suppose:
+
+$$ z=2x-6 $$
+
+At \(x=3\):
+
+$$ z=2(3)-6=0 $$
+
+Therefore:
+
+$$ P(y=1)=0.5 $$
+
+So \(x=3\) is the decision boundary.
+
+8. Scikit-learn Implementation
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+y_prob = model.predict_proba(X_test)
+
+For classification:
+
+from sklearn.metrics import accuracy_score
+
+accuracy = accuracy_score(y_test, y_pred)
+9. Your Day 70 Experiment
+
+You used:
+
+X = np.array([1,2,3,4,5,6,7,8,9,10]).reshape(-1,1)
+
+y = np.array([
+    0,0,0,0,0,
+    1,1,1,1,1
+])
+
+Your model produced:
+
+Predictions: [1 0]
+
+Probabilities:
+[[0.01799637 0.98200363]
+ [0.98200563 0.01799437]]
+
+So:
+
+Sample 1
+$$ P(0)=0.018 $$ $$ P(1)=0.982 $$
+
+→ prediction = 1
+
+Sample 2
+$$ P(0)=0.982 $$ $$ P(1)=0.018 $$
+
+→ prediction = 0
+
+Both were correctly classified:
+
+$$ Accuracy=1.0 $$
+
+⚠️ But there were only 2 test samples, so this does not establish that the model has 100% real-world accuracy.
