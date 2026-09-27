@@ -907,3 +907,126 @@ Both were correctly classified:
 $$ Accuracy=1.0 $$
 
 ⚠️ But there were only 2 test samples, so this does not establish that the model has 100% real-world accuracy.
+
+📘 Day 71 — Classification Metrics
+1. Confusion Matrix
+
+A confusion matrix tells us what kinds of mistakes a classification model makes.
+
+                    Predicted
+                  0          1
+Actual  0       TN         FP
+        1       FN         TP
+Four outcomes
+Term	Meaning
+TP	Actual = 1, Predicted = 1
+TN	Actual = 0, Predicted = 0
+FP	Actual = 0, Predicted = 1
+FN	Actual = 1, Predicted = 0
+Easy memory
+True → prediction was correct
+False → prediction was wrong
+Positive/Negative → what the model predicted
+2. Accuracy
+
+How many predictions were correct overall?
+
+$$ Accuracy=\frac{TP+TN}{TP+TN+FP+FN} $$
+
+Useful when classes are reasonably balanced.
+
+⚠️ Can be misleading with highly imbalanced data.
+
+3. Precision
+
+When the model predicts positive, how often is it correct?
+
+$$ Precision=\frac{TP}{TP+FP} $$
+
+Precision focuses on False Positives.
+
+Memory
+
+Precision → "When I say YES, am I right?"
+
+High precision → fewer false positives.
+
+4. Recall
+
+Of all the actual positive cases, how many did the model find?
+
+$$ Recall=\frac{TP}{TP+FN} $$
+
+Recall focuses on False Negatives.
+
+Memory
+
+Recall → "Did I find all the YES cases?"
+
+High recall → fewer false negatives.
+
+5. Precision vs Recall
+Precision → FP matters
+Recall    → FN matters
+Example
+
+If a model predicts many positives but many are actually negative:
+
+→ FP increases
+→ Precision decreases.
+
+If a model misses many actual positives:
+
+→ FN increases
+→ Recall decreases.
+
+6. F1 Score
+
+F1 balances precision and recall.
+
+$$ F1=2\frac{Precision\times Recall} {Precision+Recall} $$
+
+It is the harmonic mean of precision and recall.
+
+Useful when you want a balance between precision and recall, particularly when accuracy alone isn't informative.
+
+7. Scikit-learn
+from sklearn.metrics import (
+    confusion_matrix,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score
+)
+Confusion matrix
+cm = confusion_matrix(y_true, y_pred)
+print(cm)
+Individual metrics
+accuracy = accuracy_score(y_true, y_pred)
+precision = precision_score(y_true, y_pred)
+recall = recall_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred)
+Complete report
+from sklearn.metrics import classification_report
+
+print(classification_report(y_true, y_pred))
+8. Your Day 71 Example
+
+You obtained:
+
+[[3 1]
+ [1 3]]
+
+Therefore:
+
+TN = 3
+FP = 1
+FN = 1
+TP = 3
+
+And:
+
+Accuracy  = 0.75
+Precision = 0.75
+Recall    = 0.75
+F1 Score  = 0.75
