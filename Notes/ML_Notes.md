@@ -1030,3 +1030,207 @@ Accuracy  = 0.75
 Precision = 0.75
 Recall    = 0.75
 F1 Score  = 0.75
+
+📘 Day 72 — Class Imbalance + ROC Curve + ROC-AUC
+1. Class Imbalance
+
+A dataset is imbalanced when one class has many more examples than another.
+
+Example:
+
+Normal transactions = 9,900
+Fraud transactions  =   100
+
+Here, fraud is the minority class.
+
+2. Why Accuracy Can Be Misleading
+
+If 99% of transactions are normal, a model that predicts:
+
+Everything → Normal
+
+gets 99% accuracy, but detects 0 fraud cases.
+
+Therefore, with imbalanced datasets, also consider:
+
+Precision
+Recall
+F1-score
+Confusion matrix
+ROC-AUC
+Sometimes PR-AUC
+3. Classification Threshold
+
+A classifier such as Logistic Regression produces a probability:
+
+P(class = 1)
+
+Example:
+
+P(class 1) = 0.73
+
+With threshold 0.5:
+
+0.73 >= 0.5 → class 1
+
+But the threshold can be changed.
+
+Lower threshold
+Threshold ↓
+     ↓
+More positive predictions
+     ↓
+Recall generally ↑
+Higher threshold
+Threshold ↑
+     ↓
+Fewer positive predictions
+     ↓
+Recall generally ↓
+Precision may ↑
+
+The exact precision/recall changes depend on the data.
+
+4. ROC Curve
+
+ROC = Receiver Operating Characteristic
+
+It plots:
+
+$$ TPR \text{ vs } FPR $$
+
+at different classification thresholds.
+
+5. True Positive Rate (TPR)
+
+TPR is another name for Recall.
+
+$$ TPR = \frac{TP}{TP+FN} $$
+
+Therefore:
+
+TPR = Recall
+
+It measures how many actual positives the model detects.
+
+6. False Positive Rate (FPR)
+$$ FPR = \frac{FP}{FP+TN} $$
+
+It measures:
+
+Of all actual negative cases, how many were incorrectly classified as positive?
+
+Memory:
+
+TPR → How many positives did I catch?
+
+FPR → How many negatives did I falsely flag?
+
+A desirable ROC operating point generally has:
+
+High TPR
+Low FPR
+7. ROC-AUC
+
+AUC = Area Under the ROC Curve
+
+ROC-AUC measures how well the model separates/ranks the two classes across thresholds.
+
+Roughly:
+
+AUC ≈ 1.0 → excellent separation
+AUC ≈ 0.5 → random-like separation
+
+An important interpretation:
+
+ROC-AUC is related to the probability that a randomly chosen positive example receives a higher model score than a randomly chosen negative example.
+
+8. predict() vs predict_proba()
+predict()
+
+Returns hard class predictions:
+
+y_pred = model.predict(X_test)
+
+Example:
+
+[1, 0, 1, 0]
+predict_proba()
+
+Returns probabilities:
+
+y_prob = model.predict_proba(X_test)
+
+For binary classification, probability of class 1:
+
+y_prob = model.predict_proba(X_test)[:, 1]
+
+ROC-AUC normally uses these probabilities/scores, rather than hard 0/1 predictions.
+
+9. Scikit-learn
+ROC-AUC
+from sklearn.metrics import roc_auc_score
+
+y_prob = model.predict_proba(X_test)[:, 1]
+
+auc = roc_auc_score(y_test, y_prob)
+
+print("ROC-AUC:", auc)
+ROC curve
+from sklearn.metrics import roc_curve
+
+fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+10. Your Day 72 Experiment
+
+You used:
+
+y_true = [0,0,0,0,0,0,0,0,0,0,
+          1,1]
+
+y_prob = [0.10,0.20,0.15,0.30,0.05,0.40,0.25,0.10,0.35,0.20,
+          0.80,0.90]
+
+You obtained:
+
+ROC-AUC = 1.0
+
+because both positive examples had higher probabilities than every negative example.
+
+Your ROC output:
+
+FPR = [0.0, 0.0, 0.0, 0.4, 0.6, 0.7, 0.9, 1.0]
+
+TPR = [0.0, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+This demonstrates how changing the threshold produces different (FPR, TPR) points.
+
+🧠 Day 72 Cheat Sheet
+Class imbalance
+→ One class dominates the dataset
+
+Accuracy
+→ Can be misleading with imbalance
+
+Threshold ↓
+→ More positive predictions
+→ Recall generally ↑
+
+TPR
+→ Recall
+→ TP / (TP + FN)
+
+FPR
+→ False positives among actual negatives
+→ FP / (FP + TN)
+
+ROC
+→ TPR vs FPR across thresholds
+
+ROC-AUC
+→ Measures class separation/ranking across thresholds
+
+predict()
+→ Hard classes
+
+predict_proba()
+→ Probabilities/scores
