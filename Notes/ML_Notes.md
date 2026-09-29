@@ -1234,3 +1234,389 @@ predict()
 
 predict_proba()
 → Probabilities/scores
+
+# Day 73 — KNN Classification + Feature Scaling
+
+## 1. What is KNN?
+
+**KNN = K-Nearest Neighbors**
+
+KNN is a supervised learning algorithm used for classification and regression.
+
+For classification:
+
+> A new data point is assigned the class that is most common among its K nearest training points.
+
+Example:
+
+If K = 3 and the nearest neighbors are:
+
+```text
+0, 0, 1
+```
+
+Majority = `0`
+
+Therefore, the new point is classified as `0`.
+
+---
+
+## 2. How KNN Works
+
+Suppose we have a new point:
+
+```text
+X = (5, 6)
+```
+
+KNN:
+
+1. Calculates distance from the new point to training points.
+2. Finds the K closest points.
+3. Looks at their labels.
+4. Takes the majority class.
+5. Assigns that class to the new point.
+
+---
+
+## 3. Euclidean Distance
+
+The most common distance metric is Euclidean distance.
+
+For two points:
+
+```text
+A = (x₁, x₂)
+B = (y₁, y₂)
+```
+
+Distance:
+
+```text
+d = √[(x₁-y₁)² + (x₂-y₂)²]
+```
+
+For n dimensions:
+
+```text
+d = √Σ(xᵢ-yᵢ)²
+```
+
+### Example
+
+```text
+A = (1, 2)
+B = (4, 6)
+```
+
+```text
+d = √[(4-1)² + (6-2)²]
+  = √[9 + 16]
+  = 5
+```
+
+---
+
+# 4. Why Feature Scaling is Critical in KNN
+
+KNN depends on **distance**.
+
+Suppose we have:
+
+```text
+Age = 20–60
+Salary = 20,000–2,00,000
+```
+
+Salary has a much larger numerical scale.
+
+Therefore, salary can dominate the distance calculation even if age is equally important.
+
+### Solution → Feature Scaling
+
+A common method is **Standardization**.
+
+```text
+z = (x - μ) / σ
+```
+
+Where:
+
+* `μ` = mean
+* `σ` = standard deviation
+
+After standardization, features are placed on comparable scales.
+
+---
+
+# 5. StandardScaler
+
+Scikit-learn:
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+```
+
+### Important rule
+
+```text
+Training data → fit_transform()
+Test data     → transform()
+```
+
+Do NOT do:
+
+```python
+scaler.fit_transform(X_test)
+```
+
+because the scaler would learn information from the test set.
+
+This can cause **data leakage**.
+
+---
+
+# 6. Choosing K
+
+`K` = number of neighbors considered.
+
+Example:
+
+```python
+KNeighborsClassifier(n_neighbors=3)
+```
+
+means:
+
+> Look at the 3 closest training points.
+
+### Small K
+
+Example:
+
+```text
+K = 1
+```
+
+Characteristics:
+
+* Very flexible
+* Low bias
+* High variance
+* Sensitive to noise
+* Greater overfitting risk
+
+### Large K
+
+Characteristics:
+
+* Smoother decision boundary
+* Higher bias
+* Lower variance
+* Can underfit
+
+### Memory Trick
+
+```text
+Small K → sensitive → overfit
+Large K → smooth → underfit
+```
+
+K should normally be selected using **validation or cross-validation**, not randomly.
+
+---
+
+# 7. KNN is a Lazy Learner
+
+KNN does not learn a complicated mathematical model during training like Linear Regression.
+
+Instead, it essentially stores the training data.
+
+When a prediction is required:
+
+```text
+New point
+   ↓
+Calculate distances
+   ↓
+Find K nearest points
+   ↓
+Majority vote
+   ↓
+Prediction
+```
+
+Therefore, KNN is often called:
+
+* Lazy learner
+* Instance-based learner
+* Memory-based learner
+
+---
+
+# 8. Complete KNN Workflow
+
+```text
+Raw Data
+   ↓
+Train/Test Split
+   ↓
+Feature Scaling
+   ↓
+KNN Model
+   ↓
+Training
+   ↓
+Prediction
+   ↓
+Evaluation
+```
+
+Python:
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.25,
+    random_state=42
+)
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+model = KNeighborsClassifier(n_neighbors=3)
+
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Predictions:", y_pred)
+print("Actual:", y_test)
+print("Accuracy:", accuracy)
+```
+
+---
+
+# 9. Day 73 Dataset
+
+```python
+X = np.array([
+    [1, 2],
+    [2, 3],
+    [2, 1],
+    [3, 2],
+    [8, 8],
+    [9, 7],
+    [8, 9],
+    [10, 8]
+])
+
+y = np.array([
+    0, 0, 0, 0,
+    1, 1, 1, 1
+])
+```
+
+The first group belongs to class `0` and the second group belongs to class `1`.
+
+Your result:
+
+```text
+Predictions: [0 1]
+Actual:      [0 1]
+Accuracy:    1.0
+```
+
+Correct. ✅
+
+---
+
+# 10. KNN Bias-Variance Relationship
+
+| K     | Bias | Variance | Overfitting |
+| ----- | ---- | -------- | ----------- |
+| Small | Low  | High     | Higher      |
+| Large | High | Low      | Lower       |
+
+Think:
+
+```text
+K ↓ → Model becomes more sensitive
+K ↑ → Model becomes smoother
+```
+
+---
+
+# 11. Key Interview Points
+
+### Why scale features for KNN?
+
+Because KNN uses distance, and features with larger numerical ranges can dominate the distance calculation.
+
+### Why fit scaler only on training data?
+
+To prevent information from the test set influencing preprocessing.
+
+### What happens when K = 1?
+
+The closest training point completely determines the prediction, making the model sensitive to noise.
+
+### Is KNN a parametric model?
+
+No. KNN is generally considered **non-parametric**.
+
+### Is KNN lazy?
+
+Yes. Most computation happens during prediction rather than model training.
+
+---
+
+# 12. Day 73 Quick Revision
+
+```text
+KNN
+ ↓
+Find nearest K points
+ ↓
+Majority vote
+ ↓
+Prediction
+```
+
+Remember these 6 points:
+
+1. **KNN is distance-based.**
+2. **Scaling is important.**
+3. `fit_transform()` → training data.
+4. `transform()` → test data.
+5. Small K → low bias, high variance.
+6. Large K → high bias, low variance.
+
+### Most important formula
+
+```text
+Euclidean Distance = √Σ(xᵢ-yᵢ)²
+```
+
+### Most important preprocessing rule
+
+```text
+X_train → fit_transform
+X_test  → transform
+```
+
+##
