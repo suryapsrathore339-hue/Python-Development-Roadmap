@@ -1620,3 +1620,211 @@ X_test  → transform
 ```
 
 ##
+
+# Day 74 — Naive Bayes Classification
+
+## 1. What is Naive Bayes?
+
+**Naive Bayes** is a supervised machine learning algorithm primarily used for classification.
+
+It is based on **Bayes' Theorem**.
+
+Common applications:
+
+* Spam detection
+* Sentiment analysis
+* Text classification
+* News/document classification
+* Medical classification
+
+---
+
+## 2. Bayes' Theorem
+
+The fundamental formula is:
+
+$$
+P(A|B)=\frac{P(B|A)P(A)}{P(B)}
+$$
+
+For machine learning:
+
+$$
+P(Class|Features)
+=
+\frac{P(Features|Class)P(Class)}
+{P(Features)}
+$$
+
+Since \(P(Features)\) is the same for all classes when comparing them:
+
+$$
+P(Class|Features)
+\propto
+P(Features|Class)\times P(Class)
+$$
+
+### Memory
+
+```text
+Posterior ∝ Likelihood × Prior
+```
+
+---
+
+# 3. Three Important Terms
+
+### Prior
+
+Probability of a class before observing the features.
+
+$$
+P(Class)
+$$
+
+Example:
+
+```text
+90% emails → Not Spam
+10% emails → Spam
+```
+
+Therefore:
+
+```text
+P(Spam) = 0.10
+P(Not Spam) = 0.90
+```
+
+### Likelihood
+
+Probability of observing the features given a particular class.
+
+$$
+P(Features|Class)
+$$
+
+### Posterior
+
+Probability of a class after observing the features.
+
+$$
+P(Class|Features)
+$$
+
+---
+
+# 4. Why is it called "Naive"?
+
+Naive Bayes makes a simplifying assumption:
+
+> Features are conditionally independent given the class.
+
+For example, in spam detection:
+
+```text
+"free"
+"offer"
+"winner"
+```
+
+Naive Bayes treats these features as conditionally independent once the class is known.
+
+This assumption may not always be realistic, but the algorithm can still perform well in many practical problems.
+
+---
+
+# 5. Types of Naive Bayes
+
+There are three important variants.
+
+## Gaussian Naive Bayes
+
+Used for **continuous numerical features**.
+
+Examples:
+
+```text
+Age
+Height
+Temperature
+Salary
+```
+
+Scikit-learn:
+
+```python
+from sklearn.naive_bayes import GaussianNB
+
+model = GaussianNB()
+```
+
+---
+
+## Multinomial Naive Bayes
+
+Commonly used for **count-based data**, especially text.
+
+Examples:
+
+```text
+word counts
+term frequencies
+document classification
+```
+
+```python
+from sklearn.naive_bayes import MultinomialNB
+
+model = MultinomialNB()
+```
+
+---
+
+## Bernoulli Naive Bayes
+
+Used when features are **binary**.
+
+Example:
+
+```text
+word present → 1
+word absent  → 0
+```
+
+```python
+from sklearn.naive_bayes import BernoulliNB
+
+model = BernoulliNB()
+```
+
+### Quick memory
+
+```text
+Gaussian    → Continuous
+Multinomial → Counts / Text
+Bernoulli   → Binary
+```
+
+---
+
+# 6. Gaussian Naive Bayes
+
+For Day 74, we used:
+
+```python
+from sklearn.naive_bayes import GaussianNB
+
+model = GaussianNB()
+```
+
+It assumes that continuous features follow a Gaussian (normal) distribution within each class.
+
+Conceptually:
+
+```text
+Feature
+   ↓
+Estimate distri
+```
+
