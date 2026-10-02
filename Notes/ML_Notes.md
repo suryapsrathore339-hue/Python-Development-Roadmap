@@ -1827,4 +1827,458 @@ Feature
    ↓
 Estimate distri
 ```
+# Day 75 — Decision Trees
+
+## 1. What is a Decision Tree?
+
+A **Decision Tree** is a supervised machine learning algorithm used for:
+
+* Classification
+* Regression
+
+It makes predictions by repeatedly asking questions about features.
+
+Think of it as a sequence of **if-else conditions**.
+
+Example:
+
+```text
+Age > 30?
+   ↓
+ ┌───────┐
+No      Yes
+ ↓        ↓
+Class 0  Experience > 5?
+             ↓
+          Class 1
+```
+
+---
+
+# 2. How Does a Decision Tree Work?
+
+The tree starts at the **root node**.
+
+It then finds a feature and threshold that creates useful groups.
+
+For example:
+
+```text
+Salary < 50K?
+```
+
+This splits the data into:
+
+```text
+Left → Salary < 50K
+Right → Salary >= 50K
+```
+
+The process continues recursively.
+
+```text
+Root
+ ↓
+Split
+ ↓
+Child Nodes
+ ↓
+More Splits
+ ↓
+Leaf Nodes
+ ↓
+Prediction
+```
+
+---
+
+# 3. Important Tree Terminology
+
+### Root Node
+
+The first/top decision in the tree.
+
+### Internal Node
+
+A node where another decision/split occurs.
+
+### Branch
+
+The path created by a decision.
+
+### Leaf Node
+
+The final node where the prediction is made.
+
+Example:
+
+```text
+             Root
+              |
+          Age > 30?
+         /         \
+      Node         Node
+       |             |
+   Experience?     Leaf
+    /     \
+ Leaf     Leaf
+```
+
+---
+
+# 4. How Does the Tree Choose a Split?
+
+The goal is to create **purer groups**.
+
+For classification, two important measures are:
+
+* Gini Impurity
+* Entropy
+
+---
+
+# 5. Gini Impurity
+
+Formula:
+
+$$
+Gini = 1-\sum p_i^2
+$$
+
+where \(p_i\) is the proportion of samples belonging to class \(i\).
+
+### Example
+
+Suppose a node contains:
+
+```text
+10 samples
+
+Class 0 → 10
+Class 1 → 0
+```
+
+Then:
+
+$$
+Gini = 1-(1^2+0^2)
+$$
+
+$$
+Gini=0
+$$
+
+Therefore:
+
+> **Gini = 0 → perfectly pure node**
+
+---
+
+# 6. Mixed Node
+
+Suppose:
+
+```text
+Class 0 → 5
+Class 1 → 5
+```
+
+Then:
+
+$$
+p_0=0.5
+$$
+
+$$
+p_1=0.5
+$$
+
+Therefore:
+
+$$
+Gini=1-(0.5^2+0.5^2)
+$$
+
+$$
+Gini=0.5
+$$
+
+So the node is much less pure.
+
+### Memory
+
+```text
+Lower Gini → Higher purity
+Gini = 0   → Perfectly pure
+```
+
+---
+
+# 7. Entropy
+
+Another measure of impurity is **Entropy**.
+
+Formula:
+
+$$
+Entropy=-\sum p_i\log_2(p_i)
+$$
+
+Interpretation:
+
+```text
+Low entropy  → Pure node
+High entropy → Mixed node
+```
+
+A completely pure node has:
+
+$$
+Entropy=0
+$$
+
+---
+
+# 8. Gini vs Entropy
+
+Both are used to measure node impurity.
+
+```text
+Gini
+  ↓
+Impurity
+
+Entropy
+  ↓
+Impurity
+```
+
+In practice, you usually don't calculate them manually.
+
+Scikit-learn can choose the criterion:
+
+```python
+DecisionTreeClassifier(
+    criterion="gini"
+)
+```
+
+or:
+
+```python
+DecisionTreeClassifier(
+    criterion="entropy"
+)
+```
+
+---
+
+# 9. Overfitting in Decision Trees
+
+This is one of the most important concepts.
+
+A tree can keep splitting until it becomes extremely complicated.
+
+Example:
+
+```text
+Simple tree
+     ↓
+Few rules
+     ↓
+May underfit
+```
+
+But:
+
+```text
+Very deep tree
+     ↓
+Many highly specific rules
+     ↓
+May memorize training data
+     ↓
+Overfitting
+```
+
+Therefore, controlling tree complexity is important.
+
+---
+
+# 10. `max_depth`
+
+`max_depth` controls the maximum depth of the tree.
+
+Example:
+
+```python
+model = DecisionTreeClassifier(
+    max_depth=3,
+    random_state=42
+)
+```
+
+Smaller depth:
+
+```text
+↓ complexity
+↓ overfitting risk
+↑ bias
+```
+
+Larger depth:
+
+```text
+↑ complexity
+↑ overfitting risk
+↓ bias
+```
+
+---
+
+# 11. Other Important Hyperparameters
+
+### `min_samples_split`
+
+Minimum number of samples required to split an internal node.
+
+Example:
+
+```python
+DecisionTreeClassifier(
+    min_samples_split=5
+)
+```
+
+A node needs at least 5 samples before it can be split.
+
+---
+
+### `min_samples_leaf`
+
+Minimum number of samples allowed in a leaf.
+
+Example:
+
+```python
+DecisionTreeClassifier(
+    min_samples_leaf=3
+)
+```
+
+This prevents extremely tiny leaves.
+
+---
+
+### `max_leaf_nodes`
+
+Controls the maximum number of leaf nodes.
+
+---
+
+# 12. Does a Decision Tree Need Feature Scaling?
+
+Generally, **no**.
+
+For example:
+
+```text
+Age = 20–60
+Salary = 20,000–2,00,000
+```
+
+KNN can be affected because it calculates distances.
+
+But a Decision Tree asks questions such as:
+
+```text
+Age < 30?
+Salary < 50000?
+```
+
+It doesn't depend on Euclidean distance.
+
+Therefore:
+
+```text
+KNN             → Scaling important
+Decision Tree   → Scaling generally unnecessary
+```
+
+---
+
+# 13. Decision Tree Classification Code
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier(
+    max_depth=3,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+```
+
+Evaluation:
+
+```python
+from sklearn.metrics import accuracy_score
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+```
+
+---
+
+# 14. Day 75 Dataset
+
+```python
+X = np.array([
+    [1, 20],
+    [2, 21],
+    [3, 22],
+    [4, 23],
+    [8, 40],
+    [9, 41],
+    [10, 42],
+    [11, 43]
+])
+
+y = np.array([
+    0, 0, 0, 0,
+    1, 1, 1, 1
+])
+```
+
+Your output:
+
+```text
+Predictions: [0 1]
+Actual:      [0 1]
+Accuracy:    1.0
+```
+
+The implementation was correct. ✅
+
+---
+
+# 15. Decision Tree Advantages
+
+### Easy to interpret
+
+The rules can be visualized and understood.
+
+### Little preprocessing
+
+Generally doesn't require:
+
+* Standardization
+* Normalization
+
+### Handles n
+
 
