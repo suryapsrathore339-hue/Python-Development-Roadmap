@@ -2281,4 +2281,178 @@ Generally doesn't require:
 
 ### Handles n
 
+# Day 76 — Random Forest 🌲🌲
+
+## 1. What is Ensemble Learning?
+
+**Ensemble Learning** means combining multiple machine learning models to produce a stronger and more reliable model.
+
+Instead of depending on one model:
+
+> Multiple models → combine their predictions → better/stable prediction
+
+Examples:
+
+* Random Forest
+* Gradient Boosting
+* XGBoost
+* AdaBoost
+
+---
+
+## 2. What is Random Forest?
+
+**Random Forest is an ensemble of multiple Decision Trees.**
+
+For classification:
+
+> Multiple Decision Trees → predictions → majority voting → final class
+
+Example:
+
+```text
+Tree 1 → Class 1
+Tree 2 → Class 0
+Tree 3 → Class 1
+Tree 4 → Class 1
+Tree 5 → Class 0
+
+Final → Class 1
+```
+
+Because Class 1 received 3 votes.
+
+---
+
+## 3. Why Multiple Trees?
+
+A single Decision Tree can easily overfit the training data.
+
+Random Forest combines many trees so that:
+
+* Individual tree errors can cancel out
+* Predictions become more stable
+* Variance is reduced
+* Overfitting is generally reduced compared with one unrestricted tree
+
+### Main idea
+
+> **One tree can be unstable; many diverse trees are more robust.**
+
+---
+
+# 4. How does Random Forest create different trees?
+
+Random Forest introduces randomness in two important ways.
+
+### A. Bootstrap Sampling
+
+Each tree is trained using a randomly sampled dataset from the original training data.
+
+Some samples may appear multiple times, while some may not appear in tha
+
+# Day 77 — Gradient Boosting 🚀
+
+## 1. What is Gradient Boosting?
+
+**Gradient Boosting** is an ensemble learning technique that combines multiple weak learners, usually Decision Trees, to create a strong model.
+
+The key idea:
+
+> **Trees are built sequentially, and each new tree tries to correct the errors made by the previous model.**
+
+---
+
+## 2. How Gradient Boosting Works
+
+Suppose our first tree makes some mistakes.
+
+```text
+Tree 1
+   ↓
+Predictions
+   ↓
+Find errors
+   ↓
+Tree 2 learns from those errors
+   ↓
+Find remaining errors
+   ↓
+Tree 3 corrects more errors
+   ↓
+Final prediction
+```
+
+So unlike Random Forest, the trees are **not independent**.
+
+---
+
+## 3. Why is it called "Boosting"?
+
+Each new weak learner improves the overall model.
+
+```text
+Weak Tree 1
+     +
+Weak Tree 2
+     +
+Weak Tree 3
+     +
+Weak Tree 4
+     ↓
+Strong Model
+```
+
+The individual trees don't need to be extremely powerful.
+
+Their combined effect produces a strong predictor.
+
+---
+
+# 4. Why "Gradient"?
+
+Gradient Boosting minimizes a **loss function**.
+
+The gradient indicates the direction in which the loss can be reduced.
+
+Conceptually:
+
+```text
+Current Model
+     ↓
+Calculate error/loss
+     ↓
+Find direction to reduce loss
+     ↓
+Train next tree
+     ↓
+Add tree to model
+```
+
+You don't need to implement the calculus behind this yet.
+
+Remember:
+
+> **Gradient → direction for reducing the loss.**
+
+---
+
+# 5. Random Forest vs Gradient Boosting
+
+This is one of the most important comparisons.
+
+| Random Forest                      | Gradient Boosting                   |
+| ---------------------------------- | ----------------------------------- |
+| Ensemble method                    | Ensemble method                     |
+| Uses Bagging                       | Uses Boosting                       |
+| Trees built independently          | Trees built sequentially            |
+| Uses bootstrap samples             | New trees focus on previous errors  |
+| Mainly reduces variance            | Can reduce bias and variance        |
+| Majority voting for classification | Additive combination of learners    |
+| Usually robust                     | Often very powerful on tabular data |
+
+### Memory trick
+
+>
+
 
