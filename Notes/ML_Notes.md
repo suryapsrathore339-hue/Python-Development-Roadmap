@@ -2455,4 +2455,118 @@ This is one of the most important comparisons.
 
 >
 
+# Day 78 — AdaBoost 🚀
+
+## 1. What is AdaBoost?
+
+**AdaBoost = Adaptive Boosting.**
+
+It is an **ensemble learning algorithm** that combines multiple weak learners to create a strong model.
+
+The key idea:
+
+> **Each new learner gives more attention to samples that previous learners classified incorrectly.**
+
+---
+
+## 2. What is a Weak Learner?
+
+A weak learner is a simple model that performs only moderately well.
+
+AdaBoost commonly uses:
+
+> **Decision Stumps**
+
+A decision stump is a Decision Tree with only one level.
+
+```python
+DecisionTreeClassifier(max_depth=1)
+```
+
+Instead of one complicated tree:
+
+```text
+Deep Tree
+```
+
+AdaBoost uses:
+
+```text
+Small Tree
++
+Small Tree
++
+Small Tree
++
+...
+↓
+Strong Model
+```
+
+---
+
+# 3. Why "Adaptive"?
+
+AdaBoost **adapts** after every learner.
+
+Suppose the first learner makes these predictions:
+
+```text
+Sample A → Correct
+Sample B → Correct
+Sample C → Wrong
+Sample D → Correct
+```
+
+AdaBoost increases the importance of Sample C.
+
+The next learner pays more attention to it.
+
+```text
+Learner 1
+   ↓
+Find mistakes
+   ↓
+Increase importance of difficult samples
+   ↓
+Learner 2
+   ↓
+Find new mistakes
+   ↓
+Adjust importance again
+```
+
+This process continues sequentially.
+
+---
+
+# 4. Sample Weights
+
+Initially, training samples can have roughly equal importance.
+
+Conceptually:
+
+```text
+A → 1
+B → 1
+C → 1
+D → 1
+```
+
+If C is misclassified:
+
+```text
+A → normal
+B → normal
+C → HIGH importance
+D → normal
+```
+
+The next learner focuses more on C.
+
+### Important:
+
+> **AdaBoost does not s**
+
+
 
