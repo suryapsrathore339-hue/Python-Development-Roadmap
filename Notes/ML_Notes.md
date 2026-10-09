@@ -2815,6 +2815,248 @@ Because it combines many sequential trees, where later trees improve errors made
 
 ### Q2. Does XGBoos
 
+# Day 80 — K-Means Clustering & Unsupervised Learning
+
+## 1. Supervised vs. Unsupervised Learning
+
+**Supervised Learning**
+
+* Uses labeled data: features `X` and target `y`.
+* Learns to predict an output.
+* Examples: Linear Regression, Logistic Regression, Random Forest, XGBoost.
+
+**Unsupervised Learning**
+
+* Uses data without target labels.
+* Discovers hidden patterns, groups, or structure.
+* Examples: K-Means, DBSCAN, PCA.
+
+**Example:** Grouping customers according to annual income and spending score without knowing their customer category beforehand.
+
+## 2. What is K-Means?
+
+K-Means is an unsupervised clustering algorithm that divides data into `K` clusters based on similarity.
+
+* `K` = number of clusters requested.
+* A **centroid** is the mean position of points assigned to a cluster.
+* Each data point is assigned to the nearest centroid.
+
+### How K-Means works
+
+1. Choose the number of clusters, `K`.
+2. Initialize `K` centroids.
+3. Assign every point to its nearest centroid.
+4. Recalculate each centroid as the mean of its assigned points.
+5. Repeat assignment and updating until convergence or the iteration limit is reached.
+
+### Objective function
+
+K-Means minimizes the within-cluster sum of squared distances:
+
+J = Σᵢ Σₓ∈Cᵢ ||x − μᵢ||²
+
+Where:
+
+* `Cᵢ` = cluster `i`
+* `μᵢ` = centroid of cluster `i`
+* `x` = a data point
+
+This quantity is also called **inertia** in scikit-learn's K-Means implementation.
+
+## 3. Why Feature Scaling Matters
+
+K-Means uses distances to group points.
+
+Suppose the features are:
+
+* Annual income: 200,000–2,000,000
+* Spending score: 1–100
+
+Income has a much larger numerical scale and may dominate the distance calculation.
+
+Standardization transforms a feature using:
+
+z = (x − μ) / σ
+
+In scikit-learn:
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_train)
+```
+
+For a separate test or new dataset, use:
+
+```python
+X_new_scaled = scaler.transform(X_new)
+```
+
+**Important:** Fit the scaler on training data, then reuse it to transform other data. For clustering on one unlabeled dataset, fit-transform that dataset as appropriate for the task.
+
+## 4. Implementing K-Means with scikit-learn
+
+```python
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+X = np.array([
+    [20, 80],
+    [22, 85],
+    [25, 78],
+    [23, 82],
+    [80, 20],
+    [85, 18],
+    [78, 25],
+    [82, 22],
+    [50, 50],
+    [52, 48],
+    [48, 53],
+    [51, 52]
+])
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+model = KMeans(
+    n_clusters=3,
+    random_state=42,
+    n_init=10
+)
+
+model.fit(X_scaled)
+
+labels = model.labels_
+
+print("Cluster labels:", labels)
+print("Centroids:\n", model.cluster_centers_)
+print("Inertia:", model.inertia_)
+```
+
+### Meaning of the output
+
+* `labels_`: the assigned cluster ID for each sample.
+* `cluster_centers_`: coordinates of the learned centroids in scaled feature space.
+* `inertia_`: sum of squared distances from samples to their assigned centroids.
+
+My output:
+
+* Cluster labels: `[1 1 1 1 0 0 0 0 2 2 2 2]`
+* Inertia: approximately `0.1963`
+
+Interpretation:
+
+* Cluster `1`: lower income and higher spending score.
+* Cluster `0`: higher income and lower spending score.
+* Cluster `2`: middle-range customers.
+
+Cluster IDs are arbitrary identifiers. Cluster `0` is not inherently better or more important than cluster `1`.
+
+## 5. How to Choose K: Elbow Method
+
+The Elbow Method helps estimate a suitable number of clusters.
+
+Procedure:
+
+1. Fit K-Means with different values of `K`.
+2. Record inertia for each value.
+3. Plot `K` against inertia.
+4. Look for an elbow where additional clusters produce diminishing improvements.
+
+As `K` increases, inertia generally decreases or remains unchanged.
+
+For example:
+
+* `K = 1`: all points belong to one cluster.
+* `K = 3`: points can form three groups.
+* `K = number of samples`: inertia can reach zero when each point forms its own cluster.
+
+**Important:** Lower inertia alone does not prove a model is better, because it generally decreases as `K` increases. The elbow is a heuristic, not a guaranteed answer.
+
+Other ways to assess clustering include silhouette scores and domain knowledge.
+
+## 6. Important K-Means Parameters
+
+| Parameter      | Meaning                               |
+| -------------- | ------------------------------------- |
+| `n_clusters`   | Number of clusters                    |
+| `random_state` | Makes initialization reproducible     |
+| `n_init`       | Number of initializations tried       |
+| `max_iter`     | Maximum iterations per initialization |
+
+Example:
+
+```python
+model = KMeans(
+    n_clusters=3,
+    random_state=42,
+    n_init=10,
+    max_iter=300
+)
+```
+
+Multiple initializations help reduce the risk of a poor result caused by an unlucky starting position.
+
+## 7. Limitations of K-Means
+
+* Requires the number of clusters `K` beforehand.
+* Sensitive to feature scales.
+* Sensitive to centroid initialization.
+* Can be affected by outliers.
+* Often struggles with irregularly shaped clusters.
+* May perform poorly when clusters have very different densities or sizes.
+
+DBSCAN, covered in Day 81, addresses some of these limitations by grouping dense regions and identifying noise points.
+
+## 8. Common Mistakes to Avoid
+
+1. Forgetting to scale features when their ranges differ substantially.
+2. Assuming cluster labels have an inherent meaning or fixed order.
+3. Treating low inertia as proof that the selected `K` is optimal.
+4. Assuming K-Means always discovers the true groups.
+5. Using labeled evaluation metrics without ground-truth labels or an appropriate reference.
+6. Forgetting that the Elbow Method is a heuristic.
+
+## 9. Interview Questions
+
+**Q1. What is K-Means?**
+An unsupervised algorithm that partitions data into `K` clusters using distances to centroids.
+
+**Q2. What is a centroid?**
+The mean position of the points assigned to a cluster.
+
+**Q3. What is inertia?**
+The within-cluster sum of squared distances to assigned centroids.
+
+**Q4. Why is scaling important?**
+Because distance calculations can be dominated by features with larger numerical scales.
+
+**Q5. What is the Elbow Method?**
+A heuristic that helps select `K` by examining the change in inertia as the number of clusters increases.
+
+**Q6. Does K-Means require `K` beforehand?**
+Yes.
+
+**Q7. Can inertia increase when K increases on the same dataset?**
+Under the standard K-Means objective, the optimal inertia cannot increase when more clusters are allowed; actual fitted results may occasionally fail to be monotonic because optimization can find different local solutions.
+
+## 10. Day 80 Completion Checklist
+
+* [x] Understand supervised vs. unsupervised learning.
+* [x] Understand the K-Means algorithm.
+* [x] Understand centroids and cluster assignments.
+* [x] Implement K-Means in scikit-learn.
+* [x] Use StandardScaler.
+* [x] Interpret cluster labels and centroids.
+* [x] Understand inertia and the Elbow Method.
+* [x] Complete the coding task.
+* [x] Complete the review questions.
+
+**Day 80 complete — K-Means Clustering.**
+
+
 
 
 
