@@ -3056,6 +3056,140 @@ Under the standard K-Means objective, the optimal inertia cannot increase when m
 
 **Day 80 complete — K-Means Clustering.**
 
+# Day 81 — DBSCAN Clustering & Outlier Detection
+
+## 1. What is DBSCAN?
+
+**DBSCAN** stands for **Density-Based Spatial Clustering of Applications with Noise**.
+
+It is an unsupervised learning algorithm that groups nearby data points into dense regions and identifies isolated points as noise.
+
+Unlike K-Means, DBSCAN:
+- Does not require the number of clusters beforehand.
+- Can identify noise points and outliers.
+- Can discover irregularly shaped clusters.
+- Uses density and neighborhood distances rather than centroids.
+
+### Example
+
+Imagine GPS coordinates representing locations of vehicles.
+
+DBSCAN can identify areas where vehicles frequently gather and label isolated locations as noise.
+
+Other applications include anomaly detection, geographical clustering, and exploratory data analysis.
+
+## 2. Three Types of Points
+
+### A. Core Point
+A point with at least `min_samples` points in its `eps` neighborhood, including itself.
+
+### B. Border Point
+A point that lies within the neighborhood of a core point but does not have enough neighbors to qualify as a core point itself.
+
+### C. Noise Point
+A point that cannot be assigned to a density-connected cluster under DBSCAN's rules.
+
+In scikit-learn, noise points receive the label `-1`.
+
+## 3. Important Parameters
+
+### `eps`
+
+Defines the maximum distance between points for neighborhood membership.
+
+- Too small: clusters may fragment and more points may become noise.
+- Too large: separate clusters may merge.
+
+### `min_samples`
+
+Defines the minimum number of points required in an `eps` neighborhood for a point to qualify as a core point.
+
+- Lower value: less density is required.
+- Higher value: greater density is required.
+
+**Important:** `min_samples` includes the point itself.
+
+## 4. How DBSCAN Works
+
+1. Choose `eps` and `min_samples`.
+2. Examine the neighborhood of an unvisited point.
+3. If it has enough neighbors, classify it as a core point and expand a cluster.
+4. Add density-reachable points to that cluster.
+5. If a point does not have enough neighbors, it may be marked as noise. It can still become a border point if reached from a core point later.
+6. Repeat until all points have been processed.
+
+### Density reachability
+
+Points can belong to the same cluster through a chain of nearby core points. This lets DBSCAN discover curved or irregularly shaped clusters.
+
+## 5. Implementing DBSCAN in scikit-learn
+
+```python
+import numpy as np
+from sklearn.datasets import make_moons
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import DBSCAN
+
+# Generate two curved groups
+X, _ = make_moons(
+    n_samples=300,
+    noise=0.06,
+    random_state=42
+)
+
+# Scale the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Apply DBSCAN
+model = DBSCAN(
+    eps=0.25,
+    min_samples=5
+)
+
+labels = model.fit_predict(X_scaled)
+
+# Analyze the results
+unique_labels = set(labels)
+n_clusters = len(unique_labels - {-1})
+n_noise = np.sum(labels == -1)
+
+print("Cluster labels:", unique_labels)
+print("Number of clusters:", n_clusters)
+print("Number of noise points:", n_noise)
+```
+
+## 6. My Day 81 Output
+
+```text
+Cluster labels: {0, 1}
+Number of clusters: 2
+Number of noise points: 0
+```
+
+### Interpretation
+
+- **Cluster labels `{0, 1}`:** two clusters were discovered.
+- **Number of clusters `2`:** the two curved groups were successfully identified.
+- **Number of noise points `0`:** no points were labeled as noise with these settings.
+
+This is a valid result. DBSCAN does not have to identify noise points in every dataset.
+
+### Why is `-1` excluded from the cluster count?
+
+```python
+n_clusters = len(set(labels) - {-1})
+```
+
+The set of labels includes `-1` only when noise exists. Removing `-1` ensures noise is not counted as a regular cluster.
+
+## 7. Experiment with `eps`
+
+Try changing `eps` while keeping the same dataset and `min_samples`.
+
+| Experiment | `eps` | What to investigate |
+|---|---
+
 
 
 
