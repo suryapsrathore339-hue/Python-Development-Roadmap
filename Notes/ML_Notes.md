@@ -3190,6 +3190,18 @@ Try changing `eps` while keeping the same dataset and `min_samples`.
 | Experiment | `eps` | What to investigate |
 |---|---
 
+# Day 82/90 — Principal Component Analysis (PCA)
+
+## 1. What is PCA?
+
+**Principal Component Analysis (PCA)** is an unsupervised dimensionality-reduction technique that transforms a dataset with many features into fewer new features while retaining as much variance as possible.
+
+Example: Reduce 13 features to 2 principal components.
+
+### Why use PCA?
+- Reduce the number of features.
+- Speed up some machine-learning workflows
+
 
 
 
