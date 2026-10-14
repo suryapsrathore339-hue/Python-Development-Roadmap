@@ -3202,6 +3202,33 @@ Example: Reduce 13 features to 2 principal components.
 - Reduce the number of features.
 - Speed up some machine-learning workflows
 
+# Day 83/90 — t-SNE & High-Dimensional Data Visualization
+
+## 1. What is t-SNE?
+
+**t-SNE (t-distributed Stochastic Neighbor Embedding)** is a nonlinear dimensionality-reduction technique mainly used to visualize high-dimensional data in 2D or 3D.
+
+Example: Transform 64 features describing handwritten digits into 2D coordinates for plotting.
+
+### Applications
+- Visualizing image embeddings.
+- Exploring handwritten digit datasets.
+- Inspecting text and sentence embeddings.
+- Exploring local neighborhood structure in complex datasets.
+- Identifying potential groups for further investigation.
+
+**Important:** t-SNE is primarily a visualization tool. A visually separated group does not automatically prove a meaningful cluster exists in the original space.
+
+## 2. How t-SNE works
+
+1. Measures similarities between samples in the original feature space.
+2. Represents these similarities using probability distributions.
+3. Initializes points in a low-dimensional space.
+4. Adjusts their positions to preserve local neighborhood relationships.
+5. Minimizes a divergence called Kullback–Leibler (KL) divergence.
+
+You don't need to derive the mathematics initially. Understand that t-SNE attempts to keep similar nearby samples close in its
+
 
 
 
