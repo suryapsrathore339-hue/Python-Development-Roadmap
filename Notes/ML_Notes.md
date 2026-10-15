@@ -3229,6 +3229,34 @@ Example: Transform 64 features describing handwritten digits into 2D coordinates
 
 You don't need to derive the mathematics initially. Understand that t-SNE attempts to keep similar nearby samples close in its
 
+# Day 84: Anomaly Detection — Isolation Forest
+
+## 1. What is Anomaly Detection?
+
+Anomaly detection is an unsupervised machine learning technique used to identify observations that differ significantly from normal patterns in a dataset.
+
+**Applications:**
+- Banking: Detecting potentially fraudulent transactions.
+- Cybersecurity: Identifying unusual network activity.
+- Manufacturing: Detecting faulty products and machine failures.
+- Healthcare: Identifying unusual sensor readings.
+
+An anomaly is not necessarily an error or fraudulent activity. It is simply an observation that appears unusual.
+
+## 2. What is Isolation Forest?
+
+Isolation Forest is an anomaly-detection algorithm that identifies unusual observations by isolating data points using randomly selected features and split values.
+
+**Core idea:** Anomalies tend to be easier to isolate than normal observations because they often lie far from dense regions of data.
+
+### How it works
+
+1. Select a random feature.
+2. Select a random split value.
+3. Divide the observations into groups.
+4. Repeat until observations are isolated or a tree limit is reached.
+
+
 
 
 
