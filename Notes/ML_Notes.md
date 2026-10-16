@@ -3256,6 +3256,59 @@ Isolation Forest is an anomaly-detection algorithm that identifies unusual obser
 3. Divide the observations into groups.
 4. Repeat until observations are isolated or a tree limit is reached.
 
+# Day 85: Local Outlier Factor (LOF)
+
+## 1. What is LOF?
+
+Local Outlier Factor (LOF) is an unsupervised machine learning algorithm used to detect anomalies by comparing the local density of a data point with the local density of its neighbors.
+
+**Core idea:** A point may be an anomaly if it is located in a region that is much less dense than the region surrounding its neighbors.
+
+### Applications
+- Detecting unusual financial transactions
+- Identifying manufacturing defects
+- Finding suspicious network activity
+- Monitoring sensor data
+- Detecting unusual customer behavior
+
+## 2. How LOF Works
+
+### Step 1: Find nearest neighbors
+For every observation, find its nearest neighbors using a distance metric.
+
+### Step 2: Calculate reachability distance
+Reachability distance considers the distance between a point and a neighbor while accounting for the neighbor's k-distance.
+
+### Step 3: Calculate local reachability density (LRD)
+LRD measures how densely an observation is surrounded by its neighbors.
+
+Higher LRD generally means the point lies in a denser region.
+
+### Step 4: Calculate LOF
+LOF compares the average local reachability density of a point's neighbors with its own local reachability density.
+
+Conceptually:
+
+LOF(point) = Average neighbor LRD / Point LRD
+
+More precisely, it is the average ratio of each neighbor's local reachability density to the point's local reachability density.
+
+## 3. Interpreting LOF Scores
+
+| LOF score | General interpretation |
+|---|---|
+| Approximately 1 | Similar local density to neighbors |
+| Greater than 1 | Lower density than neighbors |
+| Much greater than 1 | Potential anomaly |
+
+These are guidelines, not universal thresholds.
+
+## 4. Important Parameters
+
+| Parameter | Meaning |
+|---|---|
+| `n_neighbors` | Number of neighbors considered
+
 
 
 
