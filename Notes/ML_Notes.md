@@ -3309,6 +3309,169 @@ These are guidelines, not universal thresholds.
 |---|---|
 | `n_neighbors` | Number of neighbors considered
 
+# Day 86: One-Class SVM for Anomaly Detection
+
+## 1. What is One-Class SVM?
+
+One-Class Support Vector Machine (One-Class SVM) is an unsupervised anomaly-detection algorithm that learns a boundary around the region occupied by training data.
+
+Observations outside the learned boundary can be classified as outliers.
+
+**Core idea:** Learn the structure of the training data and identify observations that do not fit that structure.
+
+### Applications
+- Detecting unusual machine sensor readings
+- Identifying suspicious network activity
+- Monitoring industrial equipment
+- Detecting unusual financial transactions
+- Finding abnormal patterns in datasets
+
+## 2. How One-Class SVM Works
+
+### Step 1: Prepare the data
+Prepare numerical features and scale them when appropriate.
+
+### Step 2: Learn the decision boundary
+The algorithm learns a boundary that separates the training data from the origin in the transformed feature space.
+
+### Step 3: Classify observations
+Observations on the inlier side of the boundary are classified as normal; observations on the outlier side are classified as anomalies.
+
+### Step 4: Examine decision scores
+The decision score indicates which side of the learned boundary an observation falls on and how strongly it falls on that side.
+
+## 3. Important Parameters
+
+| Parameter | Meaning |
+|---|---|
+| `kernel` | Determines the kernel used by the model |
+| `nu` | Upper bound on the fraction of training errors and lower bound on the fraction of support vectors |
+| `gamma` | Controls the influence of individual training points for the RBF kernel |
+| `degree` | Polynomial kernel degree; relevant when using `kernel="poly"` |
+
+### Understanding `nu`
+
+For example:
+
+```python
+nu = 0.05
+```
+
+This sets an upper bound of 5% on the training-error fraction and a lower bound of 5% on the support-vector fraction.
+
+It does **not** guarantee that exactly 5% of observations will be genuine anomalies or be classified as outliers.
+
+### Understanding `gamma`
+
+- A larger gamma generally produces more localized influence from training points and can create a more complex boundary.
+- A smaller gamma generally produces broader influence and a smoother boundary.
+
+The effect depends on the data and other model settings.
+
+## 4. Feature Scaling
+
+One-Class SVM with an RBF kernel relies on distances between observations.
+
+If one feature ranges from 0 to 100,000 and another ranges from 0 to 1, the larger-scale feature can dominate distance calculations.
+
+Feature scaling helps make numerical features comparable.
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+```
+
+**Best practice:** Fit the scaler on training data only, then use the same fitted scaler to transform validation, test, or new observations. This prevents data leakage.
+
+## 5. Practical Implementation
+
+```python
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import OneClassSVM
+
+rng = np.random.RandomState(42)
+
+normal_data = rng.normal(
+    loc=0, scale=1, size=(200, 2)
+)
+
+anomalies = np.array([
+    [7, 7],
+    [-8, 8],
+    [9, -7]
+])
+
+X = np.vstack([normal_data, anomalies])
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Train One-Class SVM
+model = OneClassSVM(
+    kernel="rbf",
+    nu=0.02,
+    gamma="scale"
+)
+
+predictions = model.fit_predict(X_scaled)
+
+print("Total observations:", len(X_scaled))
+print("Predicted normal:", np.sum(predictions == 1))
+print("Predicted anomalies:", np.sum(predictions == -1))
+print("Last three predictions:", predictions[-3:])
+
+scores = model.decision_function(X_scaled[-3:])
+print("Last three decision scores:", scores.ravel())
+```
+
+## 6. Understanding the Output
+
+My observed output:
+
+- Total observations: 203
+- Predicted normal: 193
+- Predicted anomalies: 10
+- Last three predictions: `[1, 1, 1]`
+- Last three decision scores: approximately `[0.00012036, 0.00013433, 0.00012036]`
+
+The model classified 10 observations as outliers, but the three deliberately injected extreme observations were classified as inliers.
+
+This is possible because One-Class SVM learns a boundary from the training data; it does not automatically know which points were deliberately added as anomalies.
+
+The small positive decision scores are consistent with the inlier predictions.
+
+**Important:** A successful execution does not guarantee successful anomaly detection. Evaluate model performance against known labels when they are available.
+
+## 7. Scikit-learn Methods
+
+### `fit(X)`
+Learns the model from training data.
+
+### `predict(X)`
+Returns:
+- `1` = inlier
+- `-1` = outlier
+
+### `fit_predict(X)`
+Fits the model and predicts the training observations.
+
+### `decision_function(X)`
+Returns decision scores:
+- Positive values generally indicate the inlier side of the boundary.
+- Negative values generally indicate the outlier side.
+- Values close to zero lie near the decision boundary.
+
+## 8. One-Class SVM vs Isolation Forest vs LOF
+
+| Feature | One-Class SVM | Isolation Forest | LOF |
+|---|---|---|---|
+| Main principle | Learns a boundary | Isolates points using randomized trees | Compares local densities |
+| Key parameters | `nu`, `gamma`, `kernel` | `n_estimators`, `
+
 
 
 
