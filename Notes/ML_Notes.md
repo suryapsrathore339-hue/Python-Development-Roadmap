@@ -3472,6 +3472,33 @@ Returns decision scores:
 | Main principle | Learns a boundary | Isolates points using randomized trees | Compares local densities |
 | Key parameters | `nu`, `gamma`, `kernel` | `n_estimators`, `
 
+# Day 87 — Model Evaluation for Anomaly Detection
+
+## 1. Objective
+
+Learn how to evaluate and compare anomaly detection models using precision, recall, F1-score, confusion matrices, and ROC-AUC.
+
+Models compared:
+- Isolation Forest
+- Local Outlier Factor (LOF)
+- One-Class SVM
+
+## 2. Anomaly Detection Evaluation
+
+Anomaly detection identifies unusual observations that differ from normal data patterns.
+
+In our experiment:
+- Normal observations: 500
+- Anomalies: 25
+- Total observations: 525
+- Anomaly proportion: approximately 4.76%
+
+Because normal observations greatly outnumber anomalies, accuracy alone is not a reliable evaluation metric.
+
+## 3. Confusion Matrix
+
+The confusion matrix compares actual labels
+
 
 
 
