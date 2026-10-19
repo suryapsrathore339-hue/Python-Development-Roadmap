@@ -3499,6 +3499,267 @@ Because normal observations greatly outnumber anomalies, accuracy alone is not a
 
 The confusion matrix compares actual labels
 
+# Day 88 — End-to-End Anomaly Detection Project
+
+## 1. Objective
+
+Build a complete machine learning workflow using Isolation Forest, from synthetic data generation to model training, evaluation, saving, and inference.
+
+## 2. Project Structure
+
+```text
+day88_anomaly_detection_project/
+├── train.py
+├── predict.py
+├── anomaly_detector.joblib
+├── requirements.txt
+└── README.md
+```
+
+- `train.py`: Generates data, trains the model, evaluates it, and saves the pipeline.
+- `predict.py`: Loads the saved pipeline and predicts anomalies in new observations.
+- `anomaly_detector.joblib`: Serialized preprocessing and model pipeline.
+- `requirements.txt`: Project dependencies.
+- `README.md`: Project documentation.
+
+## 3. Dataset Generation
+
+The synthetic dataset contains:
+- 500 normal observations around `(0, 0)`.
+- 25 anomalous observations generated uniformly between `-7` and `7` in each dimension.
+- 525 observations in total.
+- 2 numerical features per observation.
+
+Labels:
+- `0` = normal
+- `1` = anomaly
+
+The dataset is split into training and testing sets using:
+
+```python
+train_test_split(
+    X,
+    y,
+    test_size=0.25,
+    random_state=42,
+    stratify=y,
+)
+```
+
+`stratify=y` preserves the approximate proportion of normal and anomalous observations in both sets.
+
+Observed shapes:
+- Full dataset: `(525, 2)`
+- Training samples: `393`
+- Testing samples: `132`
+
+## 4. Scikit-learn Pipeline
+
+The pipeline combines preprocessing and model training:
+
+```python
+Pipeline([
+    ("scaler", StandardScaler()),
+    (
+        "model",
+        IsolationForest(
+            n_estimators=100,
+            contamination="auto",
+            random_state=42,
+        ),
+    ),
+])
+```
+
+### StandardScaler
+
+Standardizes numerical features using the mean and standard deviation learned from training data.
+
+The scaler must be fitted only on the training data to avoid leaking test-set information into training.
+
+### Isolation Forest
+
+Isolation Forest detects anomalies by isolating observations through random feature and split selection.
+
+Parameters:
+- `n_estimators=100`: Uses 100 trees.
+- `contamination="auto"`: Uses the estimator's automatic default threshold.
+- `random_state=42`: Makes the experiment reproducible.
+
+The pipeline is trained using:
+
+```python
+pipeline.fit(X_train)
+```
+
+The training subset contains some anomalies in this introductory example. A stricter novelty-detection approach may train using normal observations only.
+
+## 5. Prediction Label Conversion
+
+Scikit-learn's Isolation Forest convention is:
+- `1` = inlier (normal)
+- `-1` = outlier (anomaly)
+
+Our evaluation convention is:
+- `0` = normal
+- `1` = anomaly
+
+Convert the predictions with:
+
+```python
+y_pred = (raw_predictions == -1).astype(int)
+```
+
+This conversion is important because the evaluation labels must match the actual labels.
+
+## 6. Evaluation Metrics
+
+### Precision
+
+Measures the fraction of predicted anomalies that are genuine anomalies.
+
+`Precision = TP / (TP + FP)`
+
+High precision means fewer false alarms.
+
+### Recall
+
+Measures the fraction of real anomalies detected by the model.
+
+`Recall = TP / (TP + FN)`
+
+High recall means fewer missed anomalies.
+
+### F1-score
+
+Balances precision and recall using their harmonic mean.
+
+`F1 = 2 × Precision × Recall / (Precision + Recall)`
+
+### ROC-AUC
+
+Measures how well the anomaly scores rank anomalies above normal observations across thresholds.
+
+A ROC-AUC of `1.0` indicates perfect ranking on the evaluated sample, not necessarily perfect predictions at the current threshold.
+
+### Confusion Matrix
+
+Scikit-learn's `confusion_matrix(y_true, y_pred)` uses:
+
+```text
+[[TN, FP],
+ [FN, TP]]
+```
+
+- TP: Anomaly correctly detected.
+- TN: Normal observation correctly identified.
+- FP: Normal observation incorrectly flagged.
+- FN: Real anomaly missed.
+
+## 7. Day 88 Evaluation Results
+
+Observed test-set output:
+
+| Metric | Result |
+|---|---:|
+| Precision | 0.429 |
+| Recall | 1.000 |
+| F1-score | 0.600 |
+| ROC-AUC | 1.000 |
+
+Confusion matrix:
+
+```text
+[[118, 8],
+ [  0, 6]]
+```
+
+Interpretation:
+- 118 normal observations were correctly identified.
+- 8 normal observations were incorrectly flagged as anomalies.
+- 0 anomalies were missed.
+- 6 anomalies were correctly detected.
+
+The model achieved 100% recall on this test set but only 42.9% precision because it generated eight false alarms.
+
+This demonstrates the trade-off between detecting every anomaly and avoiding false positives.
+
+## 8. Saving the Pipeline
+
+Save the fitted pipeline:
+
+```python
+joblib.dump(pipeline, "anomaly_detector.joblib")
+```
+
+Load it later:
+
+```python
+pipeline = joblib.load("anomaly_detector.joblib")
+```
+
+Saving the complete pipeline preserves the fitted scaler and model together, ensuring future observations receive the same preprocessing.
+
+Only load serialized files from trusted sources because Joblib uses Python serialization mechanisms that can execute code when loading malicious files.
+
+## 9. Inference on New Observations
+
+Example:
+
+```python
+new_data = np.array([
+    [0.2, -0.3],
+    [1.0, 0.5],
+    [7.0, 7.0],
+    [-8.0, 8.0],
+])
+
+raw_predictions = pipeline.predict(new_data)
+anomaly_scores = -pipeline.decision_function(new_data)
+```
+
+Observed predictions:
+
+| Observation | Prediction | Anomaly score |
+|---|---|---:|
+| `[0.2, -0.3]` | Normal | -0.1358 |
+| `[1.0, 0.5]` | Normal | -0.1074 |
+| `[7.0, 7.0]` | Anomaly | 0.2977 |
+| `[-8.0, 8.0]` | Anomaly | 0.2865 |
+
+The anomaly score is the negative of the pipeline's `decision_function()` output.
+
+For this scoring convention:
+- Positive scores indicate observations on the anomaly side of the decision threshold.
+- Negative scores indicate observations on the normal side.
+- Larger scores generally indicate stronger anomaly evidence.
+
+## 10. Important Lessons
+
+1. Separate training and testing data before fitting preprocessing.
+2. Use a pipeline to keep preprocessing and prediction consistent.
+3. Convert model predictions to the correct label convention before evaluation.
+4. Do not rely on accuracy alone for imbalanced anomaly detection.
+5. High ROC-AUC does not guarantee that the chosen decision threshold is optimal.
+6. Save the fitted pipeline for inference without retraining.
+7. Evaluate on representative held-out data before real-world deployment.
+
+## 11. Future Improvements
+
+- Train on normal-only observations for a stricter novelty-detection workflow.
+- Tune the anomaly decision threshold to balance precision and recall.
+- Compare Isolation Forest, LOF, and One-Class SVM under the same evaluation setup.
+- Add automated tests for model loading and predictions.
+- Deploy the pipeline through FastAPI.
+
+## 12. Day 88 Summary
+
+Today I built an end-to-end anomaly detection project using Scikit-learn. I generated synthetic data, created a preprocessing and model pipeline, evaluated it with classification metrics, saved the fitted pipeline with Joblib, and used it to predict anomalies in new observations.
+
+**Key outcome:** I learned how to move from training a model in a script to reusing a saved ML pipeline for inference.
+
+
+
 
 
 
