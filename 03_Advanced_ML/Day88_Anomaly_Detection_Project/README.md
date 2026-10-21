@@ -66,11 +66,10 @@ The pipeline is saved using Joblib so that preprocessing and prediction can be r
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
-cd day88_anomaly_detection_project
+git clone https://github.com/suryapsrathore339-hue/Python-Development-Roadmap.git
+cd Python-Development-Roadmap
+cd 03_Advanced_ML/Day88_Anomaly_Detection_Project
 ```
-
-Replace `<your-repository-url>` with your actual GitHub repository URL.
 
 ### 2. Create and activate a virtual environment (optional but recommended)
 
@@ -106,6 +105,13 @@ python predict.py
 ```
 
 The script loads the saved pipeline and classifies new observations as normal or anomalous.
+
+## Automated Tests
+
+Run the tests from this project directory:
+
+```bash
+python -m pytest test_predict.py -v
 
 ## Evaluation Results
 
